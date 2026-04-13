@@ -141,10 +141,15 @@ export async function fetchArtworksForArtists(
     const metResults = await fetchBatch(needsMet, 3, async (artist) => {
       try {
         const searchTerm = artist.searchTerms[0];
-        const ids = await met.searchArtworks(searchTerm, 10);
-        const artworks = await met.getArtworksByIds(ids.slice(0, 5), 3);
+        const ids = await met.searchArtworks(searchTerm, 20);
+        const artworks = await met.getArtworksByIds(ids.slice(0, 10), 3);
 
-        const records: ArtworkRecord[] = artworks.map((a) => ({
+        // Strict validation: only keep artworks genuinely by this artist
+        const validArtworks = artworks.filter((a) =>
+          aic.isGenuineAttribution(a.artistDisplayName, artist.displayNames)
+        );
+
+        const records: ArtworkRecord[] = validArtworks.map((a) => ({
           id: `met-${a.objectID}`,
           title: a.title,
           artistId: artist.id,
