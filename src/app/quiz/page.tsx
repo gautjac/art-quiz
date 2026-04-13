@@ -177,7 +177,7 @@ export default function QuizPage() {
 
         {state === "playing" && questions[currentIndex] && (
           <QuizCard
-            key={`q-${currentIndex}`}
+            key={questions[currentIndex].artwork.id}
             question={questions[currentIndex]}
             questionNumber={currentIndex + 1}
             totalQuestions={questions.length}

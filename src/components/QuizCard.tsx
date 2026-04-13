@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { QuizQuestion } from "@/lib/quiz-engine";
 import type { Artist } from "@/lib/artists";
 import { getMovementById } from "@/lib/artists";
@@ -26,8 +26,24 @@ export default function QuizCard({
   const [artistCorrect, setArtistCorrect] = useState(false);
   const [movementCorrect, setMovementCorrect] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const movement = getMovementById(question.correctArtist.movement);
+
+  // Reset ALL state when the question changes (belt + suspenders with key)
+  const artworkId = question.artwork.id;
+  useEffect(() => {
+    setPhase("artist");
+    setSelectedArtist(null);
+    setSelectedMovement(null);
+    setArtistCorrect(false);
+    setMovementCorrect(false);
+    setImageLoaded(false);
+    return () => {
+      // Clear any pending phase transition timers on unmount/question change
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [artworkId]);
 
   function handleArtistChoice(artist: Artist) {
     if (selectedArtist) return;
@@ -35,7 +51,7 @@ export default function QuizCard({
     setSelectedArtist(artist.id);
     setArtistCorrect(correct);
 
-    setTimeout(() => setPhase("movement"), 1200);
+    timerRef.current = setTimeout(() => setPhase("movement"), 1200);
   }
 
   function handleMovementChoice(movementId: string) {
@@ -44,12 +60,15 @@ export default function QuizCard({
     setSelectedMovement(movementId);
     setMovementCorrect(correct);
 
-    setTimeout(() => setPhase("reveal"), 1200);
+    timerRef.current = setTimeout(() => setPhase("reveal"), 1200);
   }
 
   function handleNext() {
     onAnswer(artistCorrect, movementCorrect);
   }
+
+  // Use the artwork ID as a unique identifier for the image
+  const imageKey = question.artwork.id;
 
   return (
     <div className="animate-fade-in">
@@ -75,6 +94,7 @@ export default function QuizCard({
             <div className="loading-painting shimmer w-full h-64 rounded" />
           )}
           <img
+            key={imageKey}
             src={question.artwork.imageUrl}
             alt="Mystery painting"
             className={`w-full max-h-[45vh] object-contain rounded painting-frame transition-opacity duration-500 ${
