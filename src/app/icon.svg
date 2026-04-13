@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Outer frame -->
+  <rect x="2" y="2" width="28" height="28" rx="2" fill="#3d3027"/>
+  <!-- Gold frame border -->
+  <rect x="3" y="3" width="26" height="26" rx="1.5" fill="none" stroke="#c9a959" stroke-width="2"/>
+  <!-- Inner frame accent -->
+  <rect x="6" y="6" width="20" height="20" rx="1" fill="none" stroke="#c9a959" stroke-width="0.75"/>
+  <!-- Canvas area -->
+  <rect x="7.5" y="7.5" width="17" height="17" rx="0.5" fill="#faf7f2"/>
+  <!-- Stylized landscape painting -->
+  <!-- Sky -->
+  <rect x="7.5" y="7.5" width="17" height="9" fill="#6a9bc2" rx="0.5"/>
+  <!-- Sun -->
+  <circle cx="20" cy="11" r="2.5" fill="#e8d9a0" opacity="0.9"/>
+  <!-- Hills -->
+  <path d="M7.5 16.5 Q11 12, 14 15 Q17 12, 20 14.5 Q23 12, 24.5 15 L24.5 24.5 L7.5 24.5 Z" fill="#5a8a5a"/>
+  <!-- Foreground -->
+  <path d="M7.5 19 Q12 17, 16 18.5 Q20 17, 24.5 19 L24.5 24.5 L7.5 24.5 Z" fill="#3d7a3d"/>
+</svg>
