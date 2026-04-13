@@ -141,8 +141,8 @@ export async function fetchArtworksForArtists(
     const metResults = await fetchBatch(needsMet, 3, async (artist) => {
       try {
         const searchTerm = artist.searchTerms[0];
-        const ids = await met.searchArtworks(searchTerm, 20);
-        const artworks = await met.getArtworksByIds(ids.slice(0, 10), 3);
+        const ids = await met.searchArtworks(searchTerm, 30);
+        const artworks = await met.getArtworksByIds(ids.slice(0, 15), 5);
 
         // Strict validation: only keep artworks genuinely by this artist
         const validArtworks = artworks.filter((a) =>
@@ -188,14 +188,18 @@ export function generateQuizQuestions(
   const usedArtists = artists.filter((a) => artworkMap.has(a.id));
   const seenSet = new Set(seenArtworkIds);
   const usedInThisQuiz = new Set<string>();
+  const usedImageUrls = new Set<string>(); // prevent same painting appearing twice
 
   for (const artist of usedArtists) {
     if (questions.length >= count) break;
 
     const artworks = artworkMap.get(artist.id)!;
-    const artwork = pickArtwork(artworks, seenSet, usedInThisQuiz);
+    // Filter out artworks whose image URL we've already used
+    const available = artworks.filter((a) => !usedImageUrls.has(a.imageUrl));
+    const artwork = pickArtwork(available, seenSet, usedInThisQuiz);
     if (!artwork) continue;
     usedInThisQuiz.add(artwork.id);
+    usedImageUrls.add(artwork.imageUrl);
 
     const movement = getMovementById(artist.movement);
     if (!movement) continue;

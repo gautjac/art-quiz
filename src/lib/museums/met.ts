@@ -21,11 +21,16 @@ export async function searchArtworks(
   query: string,
   limit = 20
 ): Promise<number[]> {
-  const url = `${MET_BASE}/search?hasImages=true&isOnView=true&q=${encodeURIComponent(query)}`;
+  const url = `${MET_BASE}/search?hasImages=true&q=${encodeURIComponent(query)}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Met API error: ${res.status}`);
   const data = await res.json();
   const ids: number[] = data.objectIDs || [];
+  // Shuffle to get variety instead of always the same top results
+  for (let i = Math.min(ids.length, 50) - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [ids[i], ids[j]] = [ids[j], ids[i]];
+  }
   return ids.slice(0, limit);
 }
 
