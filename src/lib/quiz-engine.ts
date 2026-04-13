@@ -3,7 +3,6 @@ import {
   MOVEMENTS,
   type Artist,
   getMovementById,
-  getArtistsByMovement,
 } from "./artists";
 import {
   type ArtworkRecord,
@@ -52,6 +51,35 @@ export function selectArtistsForQuiz(
   return selected;
 }
 
+/**
+ * Pick an artwork for a quiz question, preferring ones the user hasn't seen.
+ * Falls back to any artwork if all have been seen.
+ */
+function pickArtwork(
+  artworks: ArtworkRecord[],
+  seenArtworks: Set<string>,
+  usedInThisQuiz: Set<string>
+): ArtworkRecord | null {
+  if (artworks.length === 0) return null;
+
+  // First: unseen AND not used in this quiz
+  const fresh = artworks.filter(
+    (a) => !seenArtworks.has(a.id) && !usedInThisQuiz.has(a.id)
+  );
+  if (fresh.length > 0) {
+    return fresh[Math.floor(Math.random() * fresh.length)];
+  }
+
+  // Second: not used in this quiz (even if seen before)
+  const notUsedThisQuiz = artworks.filter((a) => !usedInThisQuiz.has(a.id));
+  if (notUsedThisQuiz.length > 0) {
+    return notUsedThisQuiz[Math.floor(Math.random() * notUsedThisQuiz.length)];
+  }
+
+  // Last resort: any artwork
+  return artworks[Math.floor(Math.random() * artworks.length)];
+}
+
 // Fetch artworks for selected artists from museum APIs
 // Batches requests to avoid overwhelming APIs
 async function fetchBatch<T>(
@@ -77,14 +105,14 @@ export async function fetchArtworksForArtists(
   const aicResults = await fetchBatch(artists, 3, async (artist) => {
     try {
       const searchTerm = artist.searchTerms[0];
-      const { artworks, iiifUrl } = await aic.searchArtworks(searchTerm, 10, artist.displayNames);
+      const { artworks, iiifUrl } = await aic.searchArtworks(searchTerm, 40, artist.displayNames);
 
       const records: ArtworkRecord[] = artworks.map((a) => ({
         id: `aic-${a.id}`,
         title: a.title,
         artistId: artist.id,
         artistName: artist.name,
-        imageUrl: aic.getImageUrl(iiifUrl, a.image_id!, 843),
+        imageUrl: aic.getImageUrl(iiifUrl, a.image_id!),
         dateDisplay: a.date_display,
         museum: "aic" as const,
         museumId: a.id,
@@ -148,17 +176,21 @@ export async function fetchArtworksForArtists(
 export function generateQuizQuestions(
   artworkMap: Map<string, ArtworkRecord[]>,
   artists: Artist[],
-  count = 10
+  count = 10,
+  seenArtworkIds: string[] = []
 ): QuizQuestion[] {
   const questions: QuizQuestion[] = [];
   const usedArtists = artists.filter((a) => artworkMap.has(a.id));
+  const seenSet = new Set(seenArtworkIds);
+  const usedInThisQuiz = new Set<string>();
 
   for (const artist of usedArtists) {
     if (questions.length >= count) break;
 
     const artworks = artworkMap.get(artist.id)!;
-    // Pick a random artwork
-    const artwork = artworks[Math.floor(Math.random() * artworks.length)];
+    const artwork = pickArtwork(artworks, seenSet, usedInThisQuiz);
+    if (!artwork) continue;
+    usedInThisQuiz.add(artwork.id);
 
     const movement = getMovementById(artist.movement);
     if (!movement) continue;

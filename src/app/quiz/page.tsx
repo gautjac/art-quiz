@@ -64,7 +64,8 @@ export default function QuizPage() {
       const quizQuestions = generateQuizQuestions(
         artworkMap,
         artists,
-        QUIZ_SIZE
+        QUIZ_SIZE,
+        progress.seenArtworks
       );
 
       if (quizQuestions.length === 0) {
