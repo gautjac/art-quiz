@@ -77,7 +77,7 @@ export async function fetchArtworksForArtists(
   const aicResults = await fetchBatch(artists, 3, async (artist) => {
     try {
       const searchTerm = artist.searchTerms[0];
-      const { artworks, iiifUrl } = await aic.searchArtworks(searchTerm, 10);
+      const { artworks, iiifUrl } = await aic.searchArtworks(searchTerm, 10, artist.displayNames);
 
       const records: ArtworkRecord[] = artworks.map((a) => ({
         id: `aic-${a.id}`,

@@ -8,6 +8,7 @@ export interface Artist {
   nationality: string;
   bio: string;
   searchTerms: string[]; // terms to search museum APIs
+  displayNames: string[]; // exact name variants that artist_display should START with
 }
 
 export interface Movement {
@@ -172,6 +173,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Italian",
     bio: "Florentine master known for graceful, linear compositions and mythological subjects.",
     searchTerms: ["Sandro Botticelli"],
+    displayNames: ["Sandro Botticelli", "Alessandro Filipepi, called Sandro Botticelli"],
   },
   {
     id: "van-eyck",
@@ -183,6 +185,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Flemish",
     bio: "Pioneer of oil painting technique, renowned for astonishing detail and luminous color.",
     searchTerms: ["Jan van Eyck"],
+    displayNames: ["Jan van Eyck"],
   },
   {
     id: "bellini",
@@ -194,6 +197,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Italian",
     bio: "Venetian master who transformed the city's painting tradition with luminous color and atmospheric landscapes.",
     searchTerms: ["Giovanni Bellini"],
+    displayNames: ["Giovanni Bellini"],
   },
   {
     id: "fra-angelico",
@@ -205,6 +209,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Italian",
     bio: "Dominican friar whose devotional paintings combine medieval spirituality with Renaissance naturalism.",
     searchTerms: ["Fra Angelico"],
+    displayNames: ["Fra Angelico", "Guido di Pietro, called Fra Angelico"],
   },
 
   // 16th Century — High Renaissance / Mannerism
@@ -218,6 +223,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Italian",
     bio: "The quintessential Renaissance genius — painter, inventor, scientist, and anatomist.",
     searchTerms: ["Leonardo da Vinci"],
+    displayNames: ["Leonardo da Vinci"],
   },
   {
     id: "michelangelo",
@@ -228,7 +234,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1564,
     nationality: "Italian",
     bio: "Supreme sculptor, painter of the Sistine Chapel ceiling, and architect of St. Peter's dome.",
-    searchTerms: ["Michelangelo"],
+    searchTerms: ["Michelangelo Buonarroti"],
+    displayNames: ["Michelangelo Buonarroti", "Michelangelo"],
   },
   {
     id: "raphael",
@@ -239,7 +246,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1520,
     nationality: "Italian",
     bio: "Master of graceful composition and serene beauty, his Madonnas define High Renaissance ideals.",
-    searchTerms: ["Raphael"],
+    searchTerms: ["Raffaello Sanzio Raphael"],
+    displayNames: ["Raffaello Sanzio, called Raphael", "Raphael"],
   },
   {
     id: "titian",
@@ -250,7 +258,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1576,
     nationality: "Italian",
     bio: "The greatest Venetian colorist, whose bold brushwork influenced centuries of painting.",
-    searchTerms: ["Titian"],
+    searchTerms: ["Tiziano Vecellio Titian"],
+    displayNames: ["Titian", "Tiziano Vecellio, called Titian", "Tiziano Vecellio"],
   },
   {
     id: "durer",
@@ -262,6 +271,7 @@ export const ARTISTS: Artist[] = [
     nationality: "German",
     bio: "Germany's greatest Renaissance artist, master of printmaking, painting, and theoretical writing.",
     searchTerms: ["Albrecht Dürer", "Albrecht Durer"],
+    displayNames: ["Albrecht Dürer", "Albrecht Durer"],
   },
   {
     id: "el-greco",
@@ -273,6 +283,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Greek/Spanish",
     bio: "Visionary painter known for elongated figures, dramatic color, and intensely spiritual subjects.",
     searchTerms: ["El Greco"],
+    displayNames: ["El Greco", "Doménikos Theotokópoulos, called El Greco"],
   },
   {
     id: "bruegel",
@@ -284,6 +295,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Flemish",
     bio: "Master of landscape and peasant scenes, capturing the rhythms of rural Flemish life.",
     searchTerms: ["Pieter Bruegel"],
+    displayNames: ["Pieter Bruegel, the elder", "Pieter Bruegel the Elder", "Pieter Bruegel"],
   },
 
   // 17th Century — Baroque / Dutch Golden Age
@@ -296,7 +308,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1610,
     nationality: "Italian",
     bio: "Revolutionary painter whose dramatic chiaroscuro and unflinching realism transformed European art.",
-    searchTerms: ["Caravaggio"],
+    searchTerms: ["Michelangelo Merisi da Caravaggio"],
+    displayNames: ["Caravaggio", "Michelangelo Merisi da Caravaggio", "Michelangelo Merisi, called Caravaggio"],
   },
   {
     id: "rembrandt",
@@ -307,7 +320,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1669,
     nationality: "Dutch",
     bio: "The greatest Dutch master, unmatched in his ability to capture the inner life of his subjects.",
-    searchTerms: ["Rembrandt"],
+    searchTerms: ["Rembrandt van Rijn"],
+    displayNames: ["Rembrandt van Rijn", "Rembrandt Harmensz. van Rijn"],
   },
   {
     id: "vermeer",
@@ -318,7 +332,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1675,
     nationality: "Dutch",
     bio: "Master of quiet, light-filled domestic interiors, painting with jewel-like precision.",
-    searchTerms: ["Vermeer"],
+    searchTerms: ["Johannes Vermeer"],
+    displayNames: ["Johannes Vermeer", "Jan Vermeer"],
   },
   {
     id: "rubens",
@@ -330,6 +345,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Flemish",
     bio: "The most influential Baroque painter, known for energetic compositions and sensuous color.",
     searchTerms: ["Peter Paul Rubens"],
+    displayNames: ["Peter Paul Rubens"],
   },
   {
     id: "velazquez",
@@ -341,6 +357,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Spanish",
     bio: "Court painter to Philip IV, whose naturalistic technique influenced Manet and the Impressionists.",
     searchTerms: ["Diego Velázquez", "Velazquez"],
+    displayNames: ["Diego Velázquez", "Diego Velazquez", "Diego Rodriguez de Silva y Velázquez"],
   },
 
   // 18th Century — Rococo / Neoclassicism / Early Romanticism
@@ -353,7 +370,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1806,
     nationality: "French",
     bio: "Exuberant Rococo painter of romantic and hedonistic scenes with lush, rapid brushwork.",
-    searchTerms: ["Fragonard"],
+    searchTerms: ["Jean-Honoré Fragonard"],
+    displayNames: ["Jean-Honoré Fragonard", "Jean Honoré Fragonard", "Jean-Honore Fragonard"],
   },
   {
     id: "david",
@@ -364,7 +382,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1825,
     nationality: "French",
     bio: "Leading Neoclassical painter whose austere, heroic compositions embodied Revolutionary ideals.",
-    searchTerms: ["Jacques Louis David", "Jacques-Louis David"],
+    searchTerms: ["Jacques-Louis David"],
+    displayNames: ["Jacques-Louis David", "Jacques Louis David"],
   },
   {
     id: "goya",
@@ -375,7 +394,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1828,
     nationality: "Spanish",
     bio: "Visionary artist whose unflinching depictions of war and human darkness anticipated modern art.",
-    searchTerms: ["Francisco Goya", "Goya"],
+    searchTerms: ["Francisco Goya"],
+    displayNames: ["Francisco José de Goya y Lucientes", "Francisco de Goya", "Francisco Goya"],
   },
   {
     id: "gainsborough",
@@ -387,6 +407,7 @@ export const ARTISTS: Artist[] = [
     nationality: "British",
     bio: "Elegant portraitist and landscape painter whose feathery brushwork rivaled Reynolds.",
     searchTerms: ["Thomas Gainsborough"],
+    displayNames: ["Thomas Gainsborough"],
   },
 
   // 19th Century — Romanticism / Realism / Impressionism / Post-Impressionism
@@ -399,7 +420,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1863,
     nationality: "French",
     bio: "Leader of French Romanticism, celebrated for passionate color and dynamic compositions.",
-    searchTerms: ["Eugène Delacroix", "Eugene Delacroix"],
+    searchTerms: ["Eugène Delacroix"],
+    displayNames: ["Eugène Delacroix", "Eugene Delacroix"],
   },
   {
     id: "turner",
@@ -410,7 +432,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1851,
     nationality: "British",
     bio: "The painter of light, whose increasingly abstract seascapes and skies anticipated Impressionism.",
-    searchTerms: ["Joseph Mallord William Turner", "J. M. W. Turner"],
+    searchTerms: ["Joseph Mallord William Turner"],
+    displayNames: ["Joseph Mallord William Turner", "J. M. W. Turner", "J.M.W. Turner"],
   },
   {
     id: "courbet",
@@ -422,6 +445,7 @@ export const ARTISTS: Artist[] = [
     nationality: "French",
     bio: "Father of Realism who insisted on painting only what he could see, shocking the academic establishment.",
     searchTerms: ["Gustave Courbet"],
+    displayNames: ["Gustave Courbet"],
   },
   {
     id: "manet",
@@ -432,7 +456,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1883,
     nationality: "French",
     bio: "Bridge between Realism and Impressionism, whose bold technique scandalized the Paris Salon.",
-    searchTerms: ["Édouard Manet", "Edouard Manet"],
+    searchTerms: ["Édouard Manet"],
+    displayNames: ["Édouard Manet", "Edouard Manet"],
   },
   {
     id: "monet",
@@ -444,6 +469,7 @@ export const ARTISTS: Artist[] = [
     nationality: "French",
     bio: "The quintessential Impressionist, devoted to capturing the changing effects of light on the landscape.",
     searchTerms: ["Claude Monet"],
+    displayNames: ["Claude Monet"],
   },
   {
     id: "renoir",
@@ -454,7 +480,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1919,
     nationality: "French",
     bio: "Impressionist master of joyful color, celebrated for his radiant depictions of Parisian leisure.",
-    searchTerms: ["Pierre Auguste Renoir", "Auguste Renoir"],
+    searchTerms: ["Pierre-Auguste Renoir"],
+    displayNames: ["Pierre-Auguste Renoir", "Pierre Auguste Renoir"],
   },
   {
     id: "degas",
@@ -466,6 +493,7 @@ export const ARTISTS: Artist[] = [
     nationality: "French",
     bio: "Master draftsman famous for ballet scenes, capturing movement with unconventional compositions.",
     searchTerms: ["Edgar Degas"],
+    displayNames: ["Edgar Degas", "Hilaire Germain Edgar Degas"],
   },
   {
     id: "cassatt",
@@ -477,6 +505,7 @@ export const ARTISTS: Artist[] = [
     nationality: "American",
     bio: "The only American to exhibit with the French Impressionists, known for tender mother-and-child scenes.",
     searchTerms: ["Mary Cassatt"],
+    displayNames: ["Mary Cassatt"],
   },
   {
     id: "cezanne",
@@ -487,7 +516,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1906,
     nationality: "French",
     bio: "The father of modern art, whose structural approach to color and form paved the way for Cubism.",
-    searchTerms: ["Paul Cézanne", "Paul Cezanne"],
+    searchTerms: ["Paul Cézanne"],
+    displayNames: ["Paul Cézanne", "Paul Cezanne"],
   },
   {
     id: "van-gogh",
@@ -499,6 +529,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Dutch",
     bio: "Tormented genius whose swirling, emotionally charged paintings became icons of Western art.",
     searchTerms: ["Vincent van Gogh"],
+    displayNames: ["Vincent van Gogh"],
   },
   {
     id: "gauguin",
@@ -510,6 +541,7 @@ export const ARTISTS: Artist[] = [
     nationality: "French",
     bio: "Abandoned European civilization for Tahiti, developing a bold, flat, symbolic style.",
     searchTerms: ["Paul Gauguin"],
+    displayNames: ["Paul Gauguin"],
   },
   {
     id: "seurat",
@@ -521,6 +553,7 @@ export const ARTISTS: Artist[] = [
     nationality: "French",
     bio: "Inventor of Pointillism, applying scientific color theory through tiny dots of pure pigment.",
     searchTerms: ["Georges Seurat"],
+    displayNames: ["Georges Seurat", "Georges-Pierre Seurat"],
   },
   {
     id: "klimt",
@@ -532,6 +565,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Austrian",
     bio: "Vienna's golden painter, fusing decorative pattern, symbolism, and eroticism.",
     searchTerms: ["Gustav Klimt"],
+    displayNames: ["Gustav Klimt"],
   },
   {
     id: "homer",
@@ -543,6 +577,7 @@ export const ARTISTS: Artist[] = [
     nationality: "American",
     bio: "America's greatest painter of the sea, capturing the raw power of nature with masterful watercolors.",
     searchTerms: ["Winslow Homer"],
+    displayNames: ["Winslow Homer"],
   },
 
   // 20th Century
@@ -556,6 +591,7 @@ export const ARTISTS: Artist[] = [
     nationality: "French",
     bio: "Leader of the Fauves, who liberated color from representation to express pure emotion.",
     searchTerms: ["Henri Matisse"],
+    displayNames: ["Henri Matisse"],
   },
   {
     id: "picasso",
@@ -567,6 +603,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Spanish",
     bio: "The most influential artist of the 20th century, co-founder of Cubism and relentless innovator.",
     searchTerms: ["Pablo Picasso"],
+    displayNames: ["Pablo Picasso"],
   },
   {
     id: "kandinsky",
@@ -578,6 +615,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Russian",
     bio: "Pioneer of pure abstraction who believed color and form could express spiritual truths like music.",
     searchTerms: ["Wassily Kandinsky"],
+    displayNames: ["Wassily Kandinsky", "Vasily Kandinsky"],
   },
   {
     id: "mondrian",
@@ -589,6 +627,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Dutch",
     bio: "Distilled painting to its essence — primary colors, black lines, and white space.",
     searchTerms: ["Piet Mondrian"],
+    displayNames: ["Piet Mondrian"],
   },
   {
     id: "modigliani",
@@ -600,6 +639,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Italian",
     bio: "Created an instantly recognizable style of elongated faces and figures with melancholic beauty.",
     searchTerms: ["Amedeo Modigliani"],
+    displayNames: ["Amedeo Modigliani"],
   },
   {
     id: "chagall",
@@ -611,6 +651,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Russian/French",
     bio: "Poetic painter of floating lovers, fiddlers, and dreamlike villages drawn from his Jewish heritage.",
     searchTerms: ["Marc Chagall"],
+    displayNames: ["Marc Chagall"],
   },
   {
     id: "dali",
@@ -621,7 +662,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1989,
     nationality: "Spanish",
     bio: "Flamboyant Surrealist whose hyper-realistic technique rendered impossible dream worlds.",
-    searchTerms: ["Salvador Dalí", "Salvador Dali"],
+    searchTerms: ["Salvador Dalí"],
+    displayNames: ["Salvador Dalí", "Salvador Dali"],
   },
   {
     id: "magritte",
@@ -632,7 +674,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1967,
     nationality: "Belgian",
     bio: "Philosophical Surrealist who challenged perception with witty, thought-provoking images.",
-    searchTerms: ["René Magritte", "Rene Magritte"],
+    searchTerms: ["René Magritte"],
+    displayNames: ["René Magritte", "Rene Magritte"],
   },
   {
     id: "kahlo",
@@ -644,6 +687,7 @@ export const ARTISTS: Artist[] = [
     nationality: "Mexican",
     bio: "Turned personal suffering into powerful, symbolic self-portraits blending Mexican folk art and Surrealism.",
     searchTerms: ["Frida Kahlo"],
+    displayNames: ["Frida Kahlo"],
   },
   {
     id: "okeeffe",
@@ -654,7 +698,8 @@ export const ARTISTS: Artist[] = [
     deathYear: 1986,
     nationality: "American",
     bio: "Mother of American Modernism, known for monumental flower paintings and stark desert landscapes.",
-    searchTerms: ["Georgia O'Keeffe", "Georgia O Keeffe"],
+    searchTerms: ["Georgia O'Keeffe"],
+    displayNames: ["Georgia O'Keeffe", "Georgia O Keeffe"],
   },
   {
     id: "hopper",
@@ -666,6 +711,7 @@ export const ARTISTS: Artist[] = [
     nationality: "American",
     bio: "Painter of American solitude, whose cinematic scenes of urban isolation define modern loneliness.",
     searchTerms: ["Edward Hopper"],
+    displayNames: ["Edward Hopper"],
   },
   {
     id: "pollock",
@@ -677,6 +723,7 @@ export const ARTISTS: Artist[] = [
     nationality: "American",
     bio: "The drip painter who made the act of painting itself the subject, launching Abstract Expressionism.",
     searchTerms: ["Jackson Pollock"],
+    displayNames: ["Jackson Pollock"],
   },
   {
     id: "rothko",
@@ -688,6 +735,7 @@ export const ARTISTS: Artist[] = [
     nationality: "American",
     bio: "Created transcendent fields of luminous color meant to evoke deep emotional and spiritual responses.",
     searchTerms: ["Mark Rothko"],
+    displayNames: ["Mark Rothko"],
   },
   {
     id: "warhol",
@@ -699,6 +747,7 @@ export const ARTISTS: Artist[] = [
     nationality: "American",
     bio: "Pop Art icon who turned commercial imagery and celebrity culture into fine art.",
     searchTerms: ["Andy Warhol"],
+    displayNames: ["Andy Warhol"],
   },
 ];
 

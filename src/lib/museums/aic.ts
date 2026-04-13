@@ -34,9 +34,45 @@ const FIELDS = [
   "classification_title",
 ].join(",");
 
+// Prefixes that indicate a copy/follower/imitator — NOT the actual artist
+const ATTRIBUTION_PREFIXES = [
+  "after ",
+  "attributed to ",
+  "circle of ",
+  "copy after ",
+  "follower of ",
+  "imitator of ",
+  "manner of ",
+  "possibly ",
+  "school of ",
+  "style of ",
+  "workshop of ",
+];
+
+/**
+ * Check if an artwork is genuinely BY the artist (not a copy/follower/etc).
+ * `validNames` should be the exact display name variants that the artist_display
+ * field should START with (case-insensitive).
+ */
+export function isGenuineAttribution(
+  artistDisplay: string,
+  validNames: string[]
+): boolean {
+  const display = artistDisplay.toLowerCase().trim();
+
+  // Reject if it starts with a copy/attribution prefix
+  for (const prefix of ATTRIBUTION_PREFIXES) {
+    if (display.startsWith(prefix)) return false;
+  }
+
+  // The display must start with one of the valid name variants
+  return validNames.some((name) => display.startsWith(name.toLowerCase()));
+}
+
 export async function searchArtworks(
   query: string,
-  limit = 20
+  limit = 20,
+  validNames?: string[]
 ): Promise<{ artworks: AICSearchResult[]; iiifUrl: string }> {
   // Simple GET search — most reliable approach
   const url = `${AIC_BASE}/artworks/search?q=${encodeURIComponent(query)}&fields=${FIELDS}&limit=${limit}`;
@@ -45,13 +81,25 @@ export async function searchArtworks(
   if (!res.ok) throw new Error(`AIC API error: ${res.status}`);
 
   const data: AICApiResponse = await res.json();
-  // Filter to artworks with images, and verify the artist name appears in the result
-  const queryLower = query.toLowerCase();
-  const artworks = data.data.filter(
-    (a) =>
-      a.image_id &&
-      a.artist_display?.toLowerCase().includes(queryLower.split(" ").pop() || "")
-  );
+
+  const artworks = data.data.filter((a) => {
+    if (!a.image_id || !a.artist_display) return false;
+
+    // If we have valid name variants, use strict matching
+    if (validNames && validNames.length > 0) {
+      return isGenuineAttribution(a.artist_display, validNames);
+    }
+
+    // Fallback: check that the last name from the query appears and no copy prefix
+    const display = a.artist_display.toLowerCase();
+    const lastName = query.toLowerCase().split(" ").pop() || "";
+    if (!display.includes(lastName)) return false;
+    for (const prefix of ATTRIBUTION_PREFIXES) {
+      if (display.startsWith(prefix)) return false;
+    }
+    return true;
+  });
+
   return { artworks, iiifUrl: data.config.iiif_url };
 }
 
