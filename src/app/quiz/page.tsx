@@ -215,7 +215,7 @@ export default function QuizPage() {
   return (
     <div className="min-h-screen bg-cream">
       <header className="border-b border-cream-dark bg-white/60 backdrop-blur-sm sticky top-0 z-10">
-        <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
+        <div className="max-w-3xl mx-auto px-4 py-2 sm:py-3 flex items-center justify-between">
           <button
             onClick={() => router.push("/")}
             className="text-sm text-ink-muted hover:text-ink transition-colors cursor-pointer"
@@ -227,7 +227,7 @@ export default function QuizPage() {
         </div>
       </header>
 
-      <main className="max-w-3xl mx-auto px-4 py-8">
+      <main className="max-w-3xl mx-auto px-4 py-4 sm:py-8">
         {pageState === "loading" && (
           <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 animate-fade-in">
             <div className="relative">
@@ -241,7 +241,7 @@ export default function QuizPage() {
         {pageState === "playing" && question && (
           <div>
             {/* Progress bar */}
-            <div className="mb-6 flex items-center gap-3">
+            <div className="mb-3 sm:mb-6 flex items-center gap-3">
               <span className="text-sm text-ink-muted font-medium">
                 {currentIndex + 1} / {questions.length}
               </span>
@@ -256,15 +256,15 @@ export default function QuizPage() {
             </div>
 
             {/* Painting — use artwork ID as key to force new img element */}
-            <div className="flex justify-center mb-6" key={`img-${question.artwork.id}`}>
+            <div className="flex justify-center mb-3 sm:mb-6" key={`img-${question.artwork.id}`}>
               <div className="relative max-w-md w-full">
                 {!imageLoaded && (
-                  <div className="loading-painting shimmer w-full h-64 rounded" />
+                  <div className="loading-painting shimmer w-full h-40 sm:h-64 rounded" />
                 )}
                 <img
                   src={question.artwork.imageUrl}
                   alt="Mystery painting"
-                  className={`w-full max-h-[45vh] object-contain rounded painting-frame transition-opacity duration-500 ${
+                  className={`w-full max-h-[30vh] sm:max-h-[45vh] object-contain rounded painting-frame transition-opacity duration-500 ${
                     imageLoaded ? "opacity-100" : "opacity-0 absolute inset-0"
                   }`}
                   onLoad={() => setImageLoaded(true)}
@@ -290,10 +290,10 @@ export default function QuizPage() {
             {/* ARTIST PHASE */}
             {phase === "artist" && (
               <div>
-                <h2 className="text-xl mb-4 text-center">
+                <h2 className="text-lg sm:text-xl mb-2 sm:mb-4 text-center">
                   Who painted this?
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-xl mx-auto">
                   {question.artistChoices.map((artist) => {
                     let cls = "choice-btn";
                     if (selectedArtist) {
@@ -308,8 +308,8 @@ export default function QuizPage() {
                         onClick={() => handleArtistChoice(artist)}
                         disabled={!!selectedArtist}
                       >
-                        <span className="font-medium">{artist.name}</span>
-                        <span className="block text-xs text-ink-muted mt-0.5">
+                        <span className="font-medium text-sm sm:text-base">{artist.name}</span>
+                        <span className="block text-[10px] sm:text-xs text-ink-muted mt-0.5">
                           {artist.nationality}, {artist.birthYear}–
                           {artist.deathYear || "present"}
                         </span>
@@ -318,9 +318,9 @@ export default function QuizPage() {
                   })}
                 </div>
                 {selectedArtist && (
-                  <div className="mt-4 text-center">
+                  <div className="mt-3 text-center">
                     <p
-                      className={`text-sm font-medium mb-4 ${
+                      className={`text-sm font-medium mb-3 ${
                         artistCorrect ? "text-correct" : "text-wrong"
                       }`}
                     >
@@ -330,7 +330,7 @@ export default function QuizPage() {
                     </p>
                     <button
                       onClick={advanceToMovement}
-                      className="px-6 py-2.5 bg-ink text-cream rounded-lg font-medium hover:bg-gallery-wall transition-colors cursor-pointer"
+                      className="px-6 py-2 bg-ink text-cream rounded-lg font-medium hover:bg-gallery-wall transition-colors cursor-pointer"
                     >
                       Continue
                     </button>
@@ -342,14 +342,14 @@ export default function QuizPage() {
             {/* MOVEMENT PHASE */}
             {phase === "movement" && (
               <div>
-                <h2 className="text-xl mb-2 text-center">
+                <h2 className="text-lg sm:text-xl mb-2 text-center">
                   What movement is{" "}
                   <span className="text-gold-dark">
                     {question.correctArtist.name}
                   </span>{" "}
                   associated with?
                 </h2>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 max-w-xl mx-auto">
                   {question.movementChoices.map((m) => {
                     let cls = "choice-btn";
                     if (selectedMovement) {
@@ -364,15 +364,15 @@ export default function QuizPage() {
                         onClick={() => handleMovementChoice(m.id)}
                         disabled={!!selectedMovement}
                       >
-                        <span className="font-medium">{m.name}</span>
+                        <span className="font-medium text-sm sm:text-base">{m.name}</span>
                       </button>
                     );
                   })}
                 </div>
                 {selectedMovement && (
-                  <div className="mt-4 text-center">
+                  <div className="mt-3 text-center">
                     <p
-                      className={`text-sm font-medium mb-4 ${
+                      className={`text-sm font-medium mb-3 ${
                         movementCorrect ? "text-correct" : "text-wrong"
                       }`}
                     >
@@ -382,7 +382,7 @@ export default function QuizPage() {
                     </p>
                     <button
                       onClick={advanceToReveal}
-                      className="px-6 py-2.5 bg-ink text-cream rounded-lg font-medium hover:bg-gallery-wall transition-colors cursor-pointer"
+                      className="px-6 py-2 bg-ink text-cream rounded-lg font-medium hover:bg-gallery-wall transition-colors cursor-pointer"
                     >
                       Continue
                     </button>
