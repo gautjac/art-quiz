@@ -108,9 +108,9 @@ export function getImageUrl(
   imageId: string,
   width = 600
 ): string {
-  // Proxy through our API to add the required Referer header
-  const direct = `${iiifUrl}/${imageId}/full/${width},/0/default.jpg`;
-  return `/api/image?url=${encodeURIComponent(direct)}`;
+  // Direct URL — browsers send a Referer header automatically, which AIC requires
+  // (AIC only rejects requests with NO referer; any referer value is accepted)
+  return `${iiifUrl}/${imageId}/full/${width},/0/default.jpg`;
 }
 
 export async function getArtworkById(

@@ -95,7 +95,24 @@ export default function QuizPage() {
         return;
       }
 
-      setQuestions(quizQuestions);
+      // Pre-load ALL images before starting the quiz.
+      // Convert to blob URLs so they display instantly when switching questions.
+      setLoadingMessage("Loading paintings...");
+      const preloaded = await Promise.all(
+        quizQuestions.map(async (q) => {
+          try {
+            const res = await fetch(q.artwork.imageUrl);
+            if (!res.ok) return q;
+            const blob = await res.blob();
+            const blobUrl = URL.createObjectURL(blob);
+            return { ...q, artwork: { ...q.artwork, imageUrl: blobUrl } };
+          } catch {
+            return q; // keep original URL as fallback
+          }
+        })
+      );
+
+      setQuestions(preloaded);
       setPageState("playing");
     } catch (error) {
       console.error("Failed to load quiz:", error);
