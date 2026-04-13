@@ -16,6 +16,7 @@ export interface Movement {
   name: string;
   period: string;
   description: string;
+  longDescription: string;
 }
 
 export const MOVEMENTS: Movement[] = [
@@ -25,6 +26,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1400s",
     description:
       "Marked the rebirth of classical ideals in Florence, emphasizing perspective, anatomical accuracy, and humanist themes.",
+    longDescription:
+      "The Early Renaissance began in Florence around 1400, driven by wealthy patrons like the Medici and a rediscovery of ancient Greek and Roman culture. Artists like Brunelleschi codified linear perspective, giving paintings a convincing illusion of depth for the first time. Masaccio, Botticelli, and Fra Angelico pioneered naturalistic anatomy and spatial composition while retaining deeply spiritual subject matter. The movement laid every technical foundation that the High Renaissance would perfect a century later.",
   },
   {
     id: "northern-renaissance",
@@ -32,6 +35,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1400s-1500s",
     description:
       "Characterized by meticulous detail, rich symbolism, and oil painting mastery in the Low Countries and Germany.",
+    longDescription:
+      "While Italian artists pursued ideal beauty, their counterparts in Flanders and Germany obsessed over the real world in microscopic detail. Jan van Eyck perfected oil glazing techniques that produced luminous, jewel-like surfaces, and Albrecht Durer brought Italian perspective north while adding a distinctly Germanic intensity. Hidden symbols permeate Northern Renaissance painting: a lily for purity, a snuffed candle for mortality, a convex mirror reflecting what lies beyond the frame. The result is art that rewards prolonged, close looking more than almost any other tradition.",
   },
   {
     id: "high-renaissance",
@@ -39,6 +44,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1490-1527",
     description:
       "The pinnacle of Renaissance art, achieving perfect harmony of form, color, and composition.",
+    longDescription:
+      "The High Renaissance represents a brief, extraordinary peak centered on Rome and Venice from roughly 1490 to 1527. Leonardo da Vinci, Michelangelo, and Raphael each pushed painting, sculpture, and architecture to a level of technical mastery and intellectual ambition that has defined 'great art' ever since. Leonardo's sfumato dissolved hard outlines into atmospheric haze; Michelangelo's Sistine Chapel ceiling reimagined the human body as a vehicle for divine energy; Raphael's School of Athens achieved a serene balance that became the textbook definition of classical composition.",
   },
   {
     id: "mannerism",
@@ -46,6 +53,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1520-1600",
     description:
       "Reacted against Renaissance harmony with elongated forms, unusual spatial compositions, and vivid colors.",
+    longDescription:
+      "After the High Renaissance achieved 'perfection,' the next generation of artists had to find something new. Mannerists like El Greco, Pontormo, and Parmigianino deliberately stretched proportions, twisted figures into serpentine poses, and used acidic, unnatural color harmonies. Compositions became spatially ambiguous and emotionally heightened. What once looked like willful distortion is now recognized as a sophisticated, self-aware response to the anxiety of following Leonardo and Michelangelo.",
   },
   {
     id: "baroque",
@@ -53,6 +62,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1600-1750",
     description:
       "Dramatic, emotionally intense art using strong contrasts of light and shadow, rich color, and dynamic movement.",
+    longDescription:
+      "Born from the Catholic Counter-Reformation's need to awe and persuade, the Baroque style swept Europe in the 17th century. Caravaggio pioneered tenebrism — figures emerging from deep darkness into sharp, theatrical light — and his influence was felt from Rome to Utrecht. Rubens brought explosive energy and sensuous flesh to enormous canvases, while Velazquez used restrained observation to create the most psychologically penetrating portraits of the era. Baroque art demands a visceral, emotional response: wonder, piety, terror, ecstasy.",
   },
   {
     id: "dutch-golden-age",
@@ -60,6 +71,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1600s",
     description:
       "Dutch painters excelled in portraiture, landscapes, still lifes, and genre scenes during a period of extraordinary wealth.",
+    longDescription:
+      "The newly independent Dutch Republic of the 1600s produced an astonishing concentration of painting talent fueled by a prosperous merchant class. Without the Catholic Church or royal courts as primary patrons, Dutch artists painted for the open market — inventing new genres in the process. Rembrandt transformed portraiture into psychological drama, Vermeer distilled domestic interiors into temples of light, and specialists in landscapes, seascapes, flowers, and food created works of breathtaking technical virtuosity. More paintings were produced in the 17th-century Netherlands than in any other place or time in history.",
   },
   {
     id: "rococo",
@@ -67,6 +80,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1720-1780",
     description:
       "Ornate, decorative art celebrating pleasure, romance, and the aristocratic lifestyle with pastel colors and playful themes.",
+    longDescription:
+      "Rococo emerged in early 18th-century France as a lighter, more playful reaction to the heavy grandeur of Louis XIV's Baroque. Watteau, Boucher, and Fragonard painted scenes of aristocratic leisure — garden parties, amorous encounters, and theatrical entertainments — in delicate pastel palettes of pink, pale blue, and cream. The style extended to architecture and interior design, favoring asymmetrical curves, gilded ornament, and an overall sense of whimsy. The French Revolution would sweep it away, but at its best, Rococo painting captures sensual pleasure with extraordinary refinement.",
   },
   {
     id: "neoclassicism",
@@ -74,6 +89,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1760-1830",
     description:
       "Revived the aesthetics of ancient Greece and Rome, emphasizing order, symmetry, and moral virtue.",
+    longDescription:
+      "Fueled by archaeological discoveries at Pompeii and Herculaneum and the Enlightenment's reverence for reason, Neoclassicism sought to revive the noble simplicity of the ancient world. Jacques-Louis David became its champion, painting austere scenes of Roman civic virtue that resonated with revolutionary France. Clean outlines replaced Rococo softness; heroic sacrifice replaced amorous play; moral clarity replaced decorative excess. The style became the visual language of the French Revolution and Napoleon's empire, and its influence on architecture — from the U.S. Capitol to the British Museum — endures today.",
   },
   {
     id: "romanticism",
@@ -81,6 +98,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1780-1850",
     description:
       "Celebrated emotion, individualism, and the sublime power of nature over rational order.",
+    longDescription:
+      "Romanticism arose as a passionate counterpoint to Neoclassical reason and Industrial Revolution mechanization. Delacroix filled canvases with violent color and exotic drama; Turner dissolved seascapes into luminous veils of light and atmosphere; Goya channeled personal darkness into unflinching images of war and madness. The Romantics championed individual feeling over collective order, wild nature over cultivated gardens, and the sublime — that thrilling combination of beauty and terror experienced before a storm, a volcano, or an abyss.",
   },
   {
     id: "realism",
@@ -88,6 +107,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1840-1880",
     description:
       "Depicted ordinary subjects truthfully, rejecting idealized or romanticized portrayals in favor of everyday life.",
+    longDescription:
+      "Gustave Courbet declared that painting should depict only what the eye can see — no angels, no ancient heroes, no idealized beauty. His monumental canvases of stone breakers, peasant funerals, and his own studio scandalized the Paris Salon, which expected art to elevate and ennoble. Realism insisted on showing working-class life, contemporary social conditions, and the physical world without sentiment or embellishment. The movement opened the door for Impressionism by establishing that modern, everyday subjects were worthy of serious art.",
   },
   {
     id: "impressionism",
@@ -95,6 +116,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1860-1890",
     description:
       "Captured the fleeting effects of light and color with visible brushstrokes, painted en plein air.",
+    longDescription:
+      "In 1874, a group of rejected painters — Monet, Renoir, Degas, Cassatt, Morisot, and others — staged their own exhibition in Paris. Critics mocked them as 'Impressionists' after Monet's Impression, Sunrise, but the name stuck. Working outdoors with portable paint tubes (a recent invention), they captured how light actually fell on haystacks, water, cathedrals, and crowded boulevards. Visible brushstrokes, broken color, and fleeting moments replaced the smooth finish and timeless subjects of academic painting. Impressionism fundamentally changed what a painting could look like and what it could be about.",
   },
   {
     id: "post-impressionism",
@@ -102,6 +125,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1880-1910",
     description:
       "Extended Impressionism while rejecting its limitations, emphasizing geometric forms, symbolic content, and bold color.",
+    longDescription:
+      "Post-Impressionism is not a single style but a collection of individual responses to Impressionism's perceived limitations. Cezanne sought to make Impressionism 'solid and durable' by reducing nature to cylinders, spheres, and cones — anticipating Cubism by decades. Van Gogh loaded paint onto canvas in anguished swirls that externalized emotional states. Gauguin flattened space and used symbolic color in pursuit of a more 'primitive' spiritual truth. Seurat applied tiny dots of pure pigment in a scientific system he called Pointillism. Together, these four artists laid the foundations for virtually every major movement of the 20th century.",
   },
   {
     id: "art-nouveau",
@@ -109,6 +134,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1890-1910",
     description:
       "Characterized by flowing organic lines, decorative motifs from nature, and symbolic, dream-like imagery.",
+    longDescription:
+      "Art Nouveau sought to dissolve the boundary between fine and decorative art through sinuous, nature-inspired forms that flowed across paintings, posters, furniture, architecture, and jewelry alike. Gustav Klimt merged Byzantine gold mosaic with sensuous modern figures in Vienna; Alphonse Mucha turned Parisian advertising into high art. The related Symbolist movement, led by painters like Gustave Moreau and Odilon Redon, rejected naturalism entirely in favor of dream visions, mythological subjects, and images drawn from the subconscious — prefiguring Surrealism by thirty years.",
   },
   {
     id: "fauvism",
@@ -116,6 +143,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1905-1910",
     description:
       "Used wild, vibrant, non-naturalistic color and bold brushwork to convey emotional expression.",
+    longDescription:
+      "At the 1905 Paris Salon d'Automne, a group of painters led by Henri Matisse exhibited canvases so explosively colored that a critic called them 'les fauves' — the wild beasts. Faces were green, trees were red, shadows were blue, and the brushwork was deliberately rough and unfinished. Fauvism was brief but revolutionary: by severing the last link between color and observed reality, Matisse and Andre Derain proved that color could operate as a purely expressive force. Matisse would spend the rest of his long career exploring this insight.",
   },
   {
     id: "cubism",
@@ -123,6 +152,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1907-1920s",
     description:
       "Revolutionized representation by fracturing objects into geometric forms and showing multiple perspectives simultaneously.",
+    longDescription:
+      "In 1907, Picasso painted Les Demoiselles d'Avignon — five fractured figures with African-mask faces that shattered 500 years of Western perspective. Working alongside Georges Braque, Picasso developed Cubism through two phases: Analytic Cubism broke objects into overlapping transparent planes viewed from multiple angles simultaneously, while Synthetic Cubism introduced collage, typography, and flat decorative patterns. The movement's influence extended far beyond painting into sculpture, architecture, graphic design, and literature, making it arguably the most consequential artistic revolution of the 20th century.",
   },
   {
     id: "expressionism",
@@ -130,6 +161,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1905-1930s",
     description:
       "Distorted reality to express emotional experience, using jarring colors and agitated brushwork.",
+    longDescription:
+      "Expressionism prioritized inner emotional truth over outward appearance. In Germany, groups like Die Brucke and Der Blaue Reiter used harsh colors, crude forms, and agitated brushwork to convey anxiety, alienation, and spiritual searching. Kandinsky pushed furthest, arriving at pure abstraction by 1910 — paintings with no recognizable subject at all, organized instead by color harmony and rhythmic line. Modigliani elongated his portraits into haunting masks; Chagall floated lovers over Russian villages in dreamlike defiance of gravity. Expressionism revealed that distortion could be more truthful than accuracy.",
   },
   {
     id: "surrealism",
@@ -137,6 +170,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1920s-1960s",
     description:
       "Explored the unconscious mind through dream imagery, unexpected juxtapositions, and irrational scenes.",
+    longDescription:
+      "Founded by Andre Breton in 1924, Surrealism drew on Freudian psychoanalysis to access the unconscious through automatic drawing, dream imagery, and startling juxtapositions. Dali painted melting watches and elephants on spider legs with photographic precision, making the impossible disturbingly real. Magritte used deadpan realism to create philosophical puzzles — a pipe that is not a pipe, a man whose face is an apple. Kahlo turned self-portraiture into unflinching explorations of pain, identity, and Mexican mythology. Surrealism proved that the most compelling images often come from the irrational spaces between sleep and waking.",
   },
   {
     id: "abstract-expressionism",
@@ -144,6 +179,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1940s-1960s",
     description:
       "Emphasized spontaneous, gestural painting and large-scale canvases to express raw emotion and the subconscious.",
+    longDescription:
+      "After World War II, the center of the art world shifted from Paris to New York, where a group of American painters created the first major art movement of exclusively American origin. Pollock dripped and poured paint across enormous canvases laid on the floor, making the physical act of painting the subject itself. Rothko stacked luminous rectangles of color that vibrated at their edges, inducing meditative states in viewers. De Kooning attacked the canvas with violent gestural strokes. Abstract Expressionism insisted that painting could communicate profound emotion without depicting anything at all.",
   },
   {
     id: "pop-art",
@@ -151,6 +188,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1950s-1970s",
     description:
       "Drew from popular culture, mass media, and consumerism, blurring boundaries between 'high' and 'low' art.",
+    longDescription:
+      "Pop Art emerged in the late 1950s as a cool, ironic counterpoint to Abstract Expressionism's emotional intensity. Andy Warhol silk-screened Campbell's soup cans and Marilyn Monroe portraits, collapsing the distinction between commercial illustration and fine art. Roy Lichtenstein enlarged comic book panels into monumental paintings. Claes Oldenburg sculpted giant hamburgers and clothespins. By appropriating the imagery of advertising, consumer products, and celebrity culture, Pop artists held a mirror up to postwar America's mass-media landscape — celebrating it, critiquing it, or both at once.",
   },
   {
     id: "american-modernism",
@@ -158,6 +197,8 @@ export const MOVEMENTS: Movement[] = [
     period: "1910s-1950s",
     description:
       "American artists developed distinctive modern styles drawing on the American landscape and urban experience.",
+    longDescription:
+      "While European modernism fractured form and embraced abstraction, American Modernists forged their own path rooted in the American experience. Georgia O'Keeffe magnified flowers into monumental abstractions and distilled the New Mexico desert into stark, luminous compositions. Edward Hopper painted diners, gas stations, and hotel rooms suffused with urban loneliness and cinematic light. The Precisionists celebrated industrial architecture with geometric clarity. Together, these artists proved that modernism need not be imported — it could grow from American soil, light, and solitude.",
   },
 ];
 

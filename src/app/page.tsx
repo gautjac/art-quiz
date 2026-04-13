@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getProgress, hasQuizzedToday, type UserProgress } from "@/lib/storage";
 import { ARTISTS, MOVEMENTS, getMovementById } from "@/lib/artists";
 import ProgressRing from "@/components/ProgressRing";
@@ -242,9 +243,12 @@ export default function HomePage() {
                   <div key={entry.movement!.id} className="flex items-center gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-medium truncate">
+                        <Link
+                          href={`/movement/${entry.movement!.id}`}
+                          className="text-sm font-medium truncate hover:text-gold-dark transition-colors"
+                        >
                           {entry.movement!.name}
-                        </span>
+                        </Link>
                         <span className="text-xs text-ink-muted ml-2 flex-shrink-0">
                           {entry.accuracy}% ({entry.total} seen)
                         </span>
@@ -271,25 +275,26 @@ export default function HomePage() {
           </div>
         )}
 
-        {/* What you'll learn (first time) */}
-        {totalQuizzes === 0 && (
-          <div>
-            <h2 className="text-xl mb-4">What You'll Learn</h2>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {MOVEMENTS.slice(0, 9).map((m) => (
-                <div key={m.id} className="museum-card p-3">
-                  <p className="text-sm font-medium mb-0.5">{m.name}</p>
-                  <p className="text-xs text-ink-muted">{m.period}</p>
-                </div>
-              ))}
-              <div className="museum-card p-3 flex items-center justify-center">
-                <p className="text-sm text-ink-muted">
-                  + {MOVEMENTS.length - 9} more
+        {/* Explore movements */}
+        <div>
+          <h2 className="text-xl mb-4">
+            {totalQuizzes === 0 ? "What You'll Learn" : "Explore Movements"}
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+            {MOVEMENTS.map((m) => (
+              <Link
+                key={m.id}
+                href={`/movement/${m.id}`}
+                className="museum-card p-3 group"
+              >
+                <p className="text-sm font-medium mb-0.5 group-hover:text-gold-dark transition-colors">
+                  {m.name}
                 </p>
-              </div>
-            </div>
+                <p className="text-xs text-ink-muted">{m.period}</p>
+              </Link>
+            ))}
           </div>
-        )}
+        </div>
 
         {/* Footer */}
         <footer className="text-center py-8 border-t border-cream-dark">
