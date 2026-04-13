@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import {
   selectArtistsForQuiz,
@@ -19,15 +19,14 @@ import {
 import QuizResults from "@/components/QuizResults";
 import { type Artist, getMovementById } from "@/lib/artists";
 
-type PageState = "loading" | "playing" | "transitioning" | "results";
+type PageState = "loading" | "playing" | "results";
+type Phase = "artist" | "movement" | "reveal";
 
 interface AttemptResult {
   question: QuizQuestion;
   artistCorrect: boolean;
   movementCorrect: boolean;
 }
-
-type Phase = "artist" | "movement" | "reveal";
 
 const QUIZ_SIZE = 10;
 
@@ -42,33 +41,29 @@ export default function QuizPage() {
     "Curating today's paintings..."
   );
 
-  // Inline quiz card state — managed here to avoid remount issues
+  // Quiz card state — all managed in parent
   const [phase, setPhase] = useState<Phase>("artist");
   const [selectedArtist, setSelectedArtist] = useState<string | null>(null);
   const [selectedMovement, setSelectedMovement] = useState<string | null>(null);
   const [artistCorrect, setArtistCorrect] = useState(false);
   const [movementCorrect, setMovementCorrect] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
-  const phaseTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
 
   const question = questions[currentIndex] ?? null;
-  const movement = question ? getMovementById(question.correctArtist.movement) : null;
+  const movement = question
+    ? getMovementById(question.correctArtist.movement)
+    : null;
 
-  function resetQuizCardState() {
-    if (phaseTimerRef.current) clearTimeout(phaseTimerRef.current);
+  const loadQuiz = useCallback(async () => {
+    setPageState("loading");
+    setCurrentIndex(0);
+    setResults([]);
     setPhase("artist");
     setSelectedArtist(null);
     setSelectedMovement(null);
     setArtistCorrect(false);
     setMovementCorrect(false);
     setImageLoaded(false);
-  }
-
-  const loadQuiz = useCallback(async () => {
-    setPageState("loading");
-    setCurrentIndex(0);
-    setResults([]);
-    resetQuizCardState();
 
     const messages = [
       "Curating today's paintings...",
@@ -121,7 +116,7 @@ export default function QuizPage() {
     const correct = artist.id === question.correctArtist.id;
     setSelectedArtist(artist.id);
     setArtistCorrect(correct);
-    phaseTimerRef.current = setTimeout(() => setPhase("movement"), 1200);
+    // NO setTimeout — user clicks "Continue" to advance
   }
 
   function handleMovementChoice(movementId: string) {
@@ -129,10 +124,18 @@ export default function QuizPage() {
     const correct = movementId === question.correctMovement.id;
     setSelectedMovement(movementId);
     setMovementCorrect(correct);
-    phaseTimerRef.current = setTimeout(() => setPhase("reveal"), 1200);
+    // NO setTimeout — user clicks "Continue" to advance
   }
 
-  function handleNext() {
+  function advanceToMovement() {
+    setPhase("movement");
+  }
+
+  function advanceToReveal() {
+    setPhase("reveal");
+  }
+
+  function advanceToNext() {
     if (!question) return;
 
     const progress = getProgress();
@@ -181,23 +184,19 @@ export default function QuizPage() {
       saveProgress(progress);
       setPageState("results");
     } else {
-      // EXPLICIT TRANSITION: hide everything, then show next question
-      setPageState("transitioning");
-      resetQuizCardState();
-
-      // Use requestAnimationFrame + setTimeout to ensure DOM clears the old image
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          setCurrentIndex((prev) => prev + 1);
-          setPageState("playing");
-        }, 50);
-      });
+      // Advance to next question — reset all card state, then change index
+      setPhase("artist");
+      setSelectedArtist(null);
+      setSelectedMovement(null);
+      setArtistCorrect(false);
+      setMovementCorrect(false);
+      setImageLoaded(false);
+      setCurrentIndex(currentIndex + 1);
     }
   }
 
   return (
     <div className="min-h-screen bg-cream">
-      {/* Header */}
       <header className="border-b border-cream-dark bg-white/60 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <button
@@ -222,14 +221,8 @@ export default function QuizPage() {
           </div>
         )}
 
-        {pageState === "transitioning" && (
-          <div className="flex justify-center items-center min-h-[40vh]">
-            <div className="loading-painting shimmer w-64 h-64 rounded" />
-          </div>
-        )}
-
         {pageState === "playing" && question && (
-          <div className="animate-fade-in">
+          <div>
             {/* Progress bar */}
             <div className="mb-6 flex items-center gap-3">
               <span className="text-sm text-ink-muted font-medium">
@@ -245,14 +238,13 @@ export default function QuizPage() {
               </div>
             </div>
 
-            {/* Painting */}
-            <div className="flex justify-center mb-6">
+            {/* Painting — use artwork ID as key to force new img element */}
+            <div className="flex justify-center mb-6" key={`img-${question.artwork.id}`}>
               <div className="relative max-w-md w-full">
                 {!imageLoaded && (
                   <div className="loading-painting shimmer w-full h-64 rounded" />
                 )}
                 <img
-                  key={question.artwork.id}
                   src={question.artwork.imageUrl}
                   alt="Mystery painting"
                   className={`w-full max-h-[45vh] object-contain rounded painting-frame transition-opacity duration-500 ${
@@ -266,7 +258,7 @@ export default function QuizPage() {
                   }}
                 />
                 {phase === "reveal" && (
-                  <div className="mt-4 text-center animate-fade-in">
+                  <div className="mt-4 text-center">
                     <p className="text-sm text-ink-muted italic">
                       {question.artwork.title}
                     </p>
@@ -278,23 +270,24 @@ export default function QuizPage() {
               </div>
             </div>
 
-            {/* Artist question */}
+            {/* ARTIST PHASE */}
             {phase === "artist" && (
-              <div className="animate-slide-up">
-                <h2 className="text-xl mb-4 text-center">Who painted this?</h2>
+              <div>
+                <h2 className="text-xl mb-4 text-center">
+                  Who painted this?
+                </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto">
                   {question.artistChoices.map((artist) => {
-                    let className = "choice-btn";
+                    let cls = "choice-btn";
                     if (selectedArtist) {
                       if (artist.id === question.correctArtist.id)
-                        className += " correct";
-                      else if (artist.id === selectedArtist)
-                        className += " wrong";
+                        cls += " correct";
+                      else if (artist.id === selectedArtist) cls += " wrong";
                     }
                     return (
                       <button
                         key={artist.id}
-                        className={className}
+                        className={cls}
                         onClick={() => handleArtistChoice(artist)}
                         disabled={!!selectedArtist}
                       >
@@ -308,9 +301,9 @@ export default function QuizPage() {
                   })}
                 </div>
                 {selectedArtist && (
-                  <div className="mt-4 text-center animate-fade-in">
+                  <div className="mt-4 text-center">
                     <p
-                      className={`text-sm font-medium ${
+                      className={`text-sm font-medium mb-4 ${
                         artistCorrect ? "text-correct" : "text-wrong"
                       }`}
                     >
@@ -318,14 +311,20 @@ export default function QuizPage() {
                         ? "Correct!"
                         : `It's ${question.correctArtist.name}`}
                     </p>
+                    <button
+                      onClick={advanceToMovement}
+                      className="px-6 py-2.5 bg-ink text-cream rounded-lg font-medium hover:bg-gallery-wall transition-colors cursor-pointer"
+                    >
+                      Continue
+                    </button>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Movement question */}
+            {/* MOVEMENT PHASE */}
             {phase === "movement" && (
-              <div className="animate-slide-up">
+              <div>
                 <h2 className="text-xl mb-2 text-center">
                   What movement is{" "}
                   <span className="text-gold-dark">
@@ -335,17 +334,16 @@ export default function QuizPage() {
                 </h2>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-xl mx-auto">
                   {question.movementChoices.map((m) => {
-                    let className = "choice-btn";
+                    let cls = "choice-btn";
                     if (selectedMovement) {
                       if (m.id === question.correctMovement.id)
-                        className += " correct";
-                      else if (m.id === selectedMovement)
-                        className += " wrong";
+                        cls += " correct";
+                      else if (m.id === selectedMovement) cls += " wrong";
                     }
                     return (
                       <button
                         key={m.id}
-                        className={className}
+                        className={cls}
                         onClick={() => handleMovementChoice(m.id)}
                         disabled={!!selectedMovement}
                       >
@@ -355,9 +353,9 @@ export default function QuizPage() {
                   })}
                 </div>
                 {selectedMovement && (
-                  <div className="mt-4 text-center animate-fade-in">
+                  <div className="mt-4 text-center">
                     <p
-                      className={`text-sm font-medium ${
+                      className={`text-sm font-medium mb-4 ${
                         movementCorrect ? "text-correct" : "text-wrong"
                       }`}
                     >
@@ -365,14 +363,20 @@ export default function QuizPage() {
                         ? "Correct!"
                         : `The answer is ${question.correctMovement.name}`}
                     </p>
+                    <button
+                      onClick={advanceToReveal}
+                      className="px-6 py-2.5 bg-ink text-cream rounded-lg font-medium hover:bg-gallery-wall transition-colors cursor-pointer"
+                    >
+                      Continue
+                    </button>
                   </div>
                 )}
               </div>
             )}
 
-            {/* Reveal */}
+            {/* REVEAL PHASE */}
             {phase === "reveal" && (
-              <div className="animate-slide-up max-w-xl mx-auto">
+              <div className="max-w-xl mx-auto">
                 <div className="flex justify-center gap-4 mb-5">
                   <div
                     className={`px-4 py-2 rounded-full text-sm font-medium ${
@@ -417,7 +421,7 @@ export default function QuizPage() {
                 </div>
 
                 <button
-                  onClick={handleNext}
+                  onClick={advanceToNext}
                   className="w-full py-3.5 bg-ink text-cream rounded-lg font-medium hover:bg-gallery-wall transition-colors cursor-pointer"
                 >
                   {currentIndex + 1 === questions.length
