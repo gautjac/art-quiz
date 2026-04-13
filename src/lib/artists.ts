@@ -1,0 +1,732 @@
+export interface Artist {
+  id: string;
+  name: string;
+  movement: string;
+  century: string;
+  birthYear: number;
+  deathYear: number | null;
+  nationality: string;
+  bio: string;
+  searchTerms: string[]; // terms to search museum APIs
+}
+
+export interface Movement {
+  id: string;
+  name: string;
+  period: string;
+  description: string;
+}
+
+export const MOVEMENTS: Movement[] = [
+  {
+    id: "early-renaissance",
+    name: "Early Renaissance",
+    period: "1400s",
+    description:
+      "Marked the rebirth of classical ideals in Florence, emphasizing perspective, anatomical accuracy, and humanist themes.",
+  },
+  {
+    id: "northern-renaissance",
+    name: "Northern Renaissance",
+    period: "1400s-1500s",
+    description:
+      "Characterized by meticulous detail, rich symbolism, and oil painting mastery in the Low Countries and Germany.",
+  },
+  {
+    id: "high-renaissance",
+    name: "High Renaissance",
+    period: "1490-1527",
+    description:
+      "The pinnacle of Renaissance art, achieving perfect harmony of form, color, and composition.",
+  },
+  {
+    id: "mannerism",
+    name: "Mannerism",
+    period: "1520-1600",
+    description:
+      "Reacted against Renaissance harmony with elongated forms, unusual spatial compositions, and vivid colors.",
+  },
+  {
+    id: "baroque",
+    name: "Baroque",
+    period: "1600-1750",
+    description:
+      "Dramatic, emotionally intense art using strong contrasts of light and shadow, rich color, and dynamic movement.",
+  },
+  {
+    id: "dutch-golden-age",
+    name: "Dutch Golden Age",
+    period: "1600s",
+    description:
+      "Dutch painters excelled in portraiture, landscapes, still lifes, and genre scenes during a period of extraordinary wealth.",
+  },
+  {
+    id: "rococo",
+    name: "Rococo",
+    period: "1720-1780",
+    description:
+      "Ornate, decorative art celebrating pleasure, romance, and the aristocratic lifestyle with pastel colors and playful themes.",
+  },
+  {
+    id: "neoclassicism",
+    name: "Neoclassicism",
+    period: "1760-1830",
+    description:
+      "Revived the aesthetics of ancient Greece and Rome, emphasizing order, symmetry, and moral virtue.",
+  },
+  {
+    id: "romanticism",
+    name: "Romanticism",
+    period: "1780-1850",
+    description:
+      "Celebrated emotion, individualism, and the sublime power of nature over rational order.",
+  },
+  {
+    id: "realism",
+    name: "Realism",
+    period: "1840-1880",
+    description:
+      "Depicted ordinary subjects truthfully, rejecting idealized or romanticized portrayals in favor of everyday life.",
+  },
+  {
+    id: "impressionism",
+    name: "Impressionism",
+    period: "1860-1890",
+    description:
+      "Captured the fleeting effects of light and color with visible brushstrokes, painted en plein air.",
+  },
+  {
+    id: "post-impressionism",
+    name: "Post-Impressionism",
+    period: "1880-1910",
+    description:
+      "Extended Impressionism while rejecting its limitations, emphasizing geometric forms, symbolic content, and bold color.",
+  },
+  {
+    id: "art-nouveau",
+    name: "Art Nouveau / Symbolism",
+    period: "1890-1910",
+    description:
+      "Characterized by flowing organic lines, decorative motifs from nature, and symbolic, dream-like imagery.",
+  },
+  {
+    id: "fauvism",
+    name: "Fauvism",
+    period: "1905-1910",
+    description:
+      "Used wild, vibrant, non-naturalistic color and bold brushwork to convey emotional expression.",
+  },
+  {
+    id: "cubism",
+    name: "Cubism",
+    period: "1907-1920s",
+    description:
+      "Revolutionized representation by fracturing objects into geometric forms and showing multiple perspectives simultaneously.",
+  },
+  {
+    id: "expressionism",
+    name: "Expressionism",
+    period: "1905-1930s",
+    description:
+      "Distorted reality to express emotional experience, using jarring colors and agitated brushwork.",
+  },
+  {
+    id: "surrealism",
+    name: "Surrealism",
+    period: "1920s-1960s",
+    description:
+      "Explored the unconscious mind through dream imagery, unexpected juxtapositions, and irrational scenes.",
+  },
+  {
+    id: "abstract-expressionism",
+    name: "Abstract Expressionism",
+    period: "1940s-1960s",
+    description:
+      "Emphasized spontaneous, gestural painting and large-scale canvases to express raw emotion and the subconscious.",
+  },
+  {
+    id: "pop-art",
+    name: "Pop Art",
+    period: "1950s-1970s",
+    description:
+      "Drew from popular culture, mass media, and consumerism, blurring boundaries between 'high' and 'low' art.",
+  },
+  {
+    id: "american-modernism",
+    name: "American Modernism",
+    period: "1910s-1950s",
+    description:
+      "American artists developed distinctive modern styles drawing on the American landscape and urban experience.",
+  },
+];
+
+export const ARTISTS: Artist[] = [
+  // 15th Century — Early Renaissance
+  {
+    id: "botticelli",
+    name: "Sandro Botticelli",
+    movement: "early-renaissance",
+    century: "15th",
+    birthYear: 1445,
+    deathYear: 1510,
+    nationality: "Italian",
+    bio: "Florentine master known for graceful, linear compositions and mythological subjects.",
+    searchTerms: ["Sandro Botticelli"],
+  },
+  {
+    id: "van-eyck",
+    name: "Jan van Eyck",
+    movement: "northern-renaissance",
+    century: "15th",
+    birthYear: 1390,
+    deathYear: 1441,
+    nationality: "Flemish",
+    bio: "Pioneer of oil painting technique, renowned for astonishing detail and luminous color.",
+    searchTerms: ["Jan van Eyck"],
+  },
+  {
+    id: "bellini",
+    name: "Giovanni Bellini",
+    movement: "early-renaissance",
+    century: "15th",
+    birthYear: 1430,
+    deathYear: 1516,
+    nationality: "Italian",
+    bio: "Venetian master who transformed the city's painting tradition with luminous color and atmospheric landscapes.",
+    searchTerms: ["Giovanni Bellini"],
+  },
+  {
+    id: "fra-angelico",
+    name: "Fra Angelico",
+    movement: "early-renaissance",
+    century: "15th",
+    birthYear: 1395,
+    deathYear: 1455,
+    nationality: "Italian",
+    bio: "Dominican friar whose devotional paintings combine medieval spirituality with Renaissance naturalism.",
+    searchTerms: ["Fra Angelico"],
+  },
+
+  // 16th Century — High Renaissance / Mannerism
+  {
+    id: "da-vinci",
+    name: "Leonardo da Vinci",
+    movement: "high-renaissance",
+    century: "16th",
+    birthYear: 1452,
+    deathYear: 1519,
+    nationality: "Italian",
+    bio: "The quintessential Renaissance genius — painter, inventor, scientist, and anatomist.",
+    searchTerms: ["Leonardo da Vinci"],
+  },
+  {
+    id: "michelangelo",
+    name: "Michelangelo",
+    movement: "high-renaissance",
+    century: "16th",
+    birthYear: 1475,
+    deathYear: 1564,
+    nationality: "Italian",
+    bio: "Supreme sculptor, painter of the Sistine Chapel ceiling, and architect of St. Peter's dome.",
+    searchTerms: ["Michelangelo"],
+  },
+  {
+    id: "raphael",
+    name: "Raphael",
+    movement: "high-renaissance",
+    century: "16th",
+    birthYear: 1483,
+    deathYear: 1520,
+    nationality: "Italian",
+    bio: "Master of graceful composition and serene beauty, his Madonnas define High Renaissance ideals.",
+    searchTerms: ["Raphael"],
+  },
+  {
+    id: "titian",
+    name: "Titian",
+    movement: "high-renaissance",
+    century: "16th",
+    birthYear: 1488,
+    deathYear: 1576,
+    nationality: "Italian",
+    bio: "The greatest Venetian colorist, whose bold brushwork influenced centuries of painting.",
+    searchTerms: ["Titian"],
+  },
+  {
+    id: "durer",
+    name: "Albrecht Dürer",
+    movement: "northern-renaissance",
+    century: "16th",
+    birthYear: 1471,
+    deathYear: 1528,
+    nationality: "German",
+    bio: "Germany's greatest Renaissance artist, master of printmaking, painting, and theoretical writing.",
+    searchTerms: ["Albrecht Dürer", "Albrecht Durer"],
+  },
+  {
+    id: "el-greco",
+    name: "El Greco",
+    movement: "mannerism",
+    century: "16th",
+    birthYear: 1541,
+    deathYear: 1614,
+    nationality: "Greek/Spanish",
+    bio: "Visionary painter known for elongated figures, dramatic color, and intensely spiritual subjects.",
+    searchTerms: ["El Greco"],
+  },
+  {
+    id: "bruegel",
+    name: "Pieter Bruegel the Elder",
+    movement: "northern-renaissance",
+    century: "16th",
+    birthYear: 1525,
+    deathYear: 1569,
+    nationality: "Flemish",
+    bio: "Master of landscape and peasant scenes, capturing the rhythms of rural Flemish life.",
+    searchTerms: ["Pieter Bruegel"],
+  },
+
+  // 17th Century — Baroque / Dutch Golden Age
+  {
+    id: "caravaggio",
+    name: "Caravaggio",
+    movement: "baroque",
+    century: "17th",
+    birthYear: 1571,
+    deathYear: 1610,
+    nationality: "Italian",
+    bio: "Revolutionary painter whose dramatic chiaroscuro and unflinching realism transformed European art.",
+    searchTerms: ["Caravaggio"],
+  },
+  {
+    id: "rembrandt",
+    name: "Rembrandt van Rijn",
+    movement: "dutch-golden-age",
+    century: "17th",
+    birthYear: 1606,
+    deathYear: 1669,
+    nationality: "Dutch",
+    bio: "The greatest Dutch master, unmatched in his ability to capture the inner life of his subjects.",
+    searchTerms: ["Rembrandt"],
+  },
+  {
+    id: "vermeer",
+    name: "Johannes Vermeer",
+    movement: "dutch-golden-age",
+    century: "17th",
+    birthYear: 1632,
+    deathYear: 1675,
+    nationality: "Dutch",
+    bio: "Master of quiet, light-filled domestic interiors, painting with jewel-like precision.",
+    searchTerms: ["Vermeer"],
+  },
+  {
+    id: "rubens",
+    name: "Peter Paul Rubens",
+    movement: "baroque",
+    century: "17th",
+    birthYear: 1577,
+    deathYear: 1640,
+    nationality: "Flemish",
+    bio: "The most influential Baroque painter, known for energetic compositions and sensuous color.",
+    searchTerms: ["Peter Paul Rubens"],
+  },
+  {
+    id: "velazquez",
+    name: "Diego Velázquez",
+    movement: "baroque",
+    century: "17th",
+    birthYear: 1599,
+    deathYear: 1660,
+    nationality: "Spanish",
+    bio: "Court painter to Philip IV, whose naturalistic technique influenced Manet and the Impressionists.",
+    searchTerms: ["Diego Velázquez", "Velazquez"],
+  },
+
+  // 18th Century — Rococo / Neoclassicism / Early Romanticism
+  {
+    id: "fragonard",
+    name: "Jean-Honoré Fragonard",
+    movement: "rococo",
+    century: "18th",
+    birthYear: 1732,
+    deathYear: 1806,
+    nationality: "French",
+    bio: "Exuberant Rococo painter of romantic and hedonistic scenes with lush, rapid brushwork.",
+    searchTerms: ["Fragonard"],
+  },
+  {
+    id: "david",
+    name: "Jacques-Louis David",
+    movement: "neoclassicism",
+    century: "18th",
+    birthYear: 1748,
+    deathYear: 1825,
+    nationality: "French",
+    bio: "Leading Neoclassical painter whose austere, heroic compositions embodied Revolutionary ideals.",
+    searchTerms: ["Jacques Louis David", "Jacques-Louis David"],
+  },
+  {
+    id: "goya",
+    name: "Francisco Goya",
+    movement: "romanticism",
+    century: "18th",
+    birthYear: 1746,
+    deathYear: 1828,
+    nationality: "Spanish",
+    bio: "Visionary artist whose unflinching depictions of war and human darkness anticipated modern art.",
+    searchTerms: ["Francisco Goya", "Goya"],
+  },
+  {
+    id: "gainsborough",
+    name: "Thomas Gainsborough",
+    movement: "rococo",
+    century: "18th",
+    birthYear: 1727,
+    deathYear: 1788,
+    nationality: "British",
+    bio: "Elegant portraitist and landscape painter whose feathery brushwork rivaled Reynolds.",
+    searchTerms: ["Thomas Gainsborough"],
+  },
+
+  // 19th Century — Romanticism / Realism / Impressionism / Post-Impressionism
+  {
+    id: "delacroix",
+    name: "Eugène Delacroix",
+    movement: "romanticism",
+    century: "19th",
+    birthYear: 1798,
+    deathYear: 1863,
+    nationality: "French",
+    bio: "Leader of French Romanticism, celebrated for passionate color and dynamic compositions.",
+    searchTerms: ["Eugène Delacroix", "Eugene Delacroix"],
+  },
+  {
+    id: "turner",
+    name: "J.M.W. Turner",
+    movement: "romanticism",
+    century: "19th",
+    birthYear: 1775,
+    deathYear: 1851,
+    nationality: "British",
+    bio: "The painter of light, whose increasingly abstract seascapes and skies anticipated Impressionism.",
+    searchTerms: ["Joseph Mallord William Turner", "J. M. W. Turner"],
+  },
+  {
+    id: "courbet",
+    name: "Gustave Courbet",
+    movement: "realism",
+    century: "19th",
+    birthYear: 1819,
+    deathYear: 1877,
+    nationality: "French",
+    bio: "Father of Realism who insisted on painting only what he could see, shocking the academic establishment.",
+    searchTerms: ["Gustave Courbet"],
+  },
+  {
+    id: "manet",
+    name: "Édouard Manet",
+    movement: "impressionism",
+    century: "19th",
+    birthYear: 1832,
+    deathYear: 1883,
+    nationality: "French",
+    bio: "Bridge between Realism and Impressionism, whose bold technique scandalized the Paris Salon.",
+    searchTerms: ["Édouard Manet", "Edouard Manet"],
+  },
+  {
+    id: "monet",
+    name: "Claude Monet",
+    movement: "impressionism",
+    century: "19th",
+    birthYear: 1840,
+    deathYear: 1926,
+    nationality: "French",
+    bio: "The quintessential Impressionist, devoted to capturing the changing effects of light on the landscape.",
+    searchTerms: ["Claude Monet"],
+  },
+  {
+    id: "renoir",
+    name: "Pierre-Auguste Renoir",
+    movement: "impressionism",
+    century: "19th",
+    birthYear: 1841,
+    deathYear: 1919,
+    nationality: "French",
+    bio: "Impressionist master of joyful color, celebrated for his radiant depictions of Parisian leisure.",
+    searchTerms: ["Pierre Auguste Renoir", "Auguste Renoir"],
+  },
+  {
+    id: "degas",
+    name: "Edgar Degas",
+    movement: "impressionism",
+    century: "19th",
+    birthYear: 1834,
+    deathYear: 1917,
+    nationality: "French",
+    bio: "Master draftsman famous for ballet scenes, capturing movement with unconventional compositions.",
+    searchTerms: ["Edgar Degas"],
+  },
+  {
+    id: "cassatt",
+    name: "Mary Cassatt",
+    movement: "impressionism",
+    century: "19th",
+    birthYear: 1844,
+    deathYear: 1926,
+    nationality: "American",
+    bio: "The only American to exhibit with the French Impressionists, known for tender mother-and-child scenes.",
+    searchTerms: ["Mary Cassatt"],
+  },
+  {
+    id: "cezanne",
+    name: "Paul Cézanne",
+    movement: "post-impressionism",
+    century: "19th",
+    birthYear: 1839,
+    deathYear: 1906,
+    nationality: "French",
+    bio: "The father of modern art, whose structural approach to color and form paved the way for Cubism.",
+    searchTerms: ["Paul Cézanne", "Paul Cezanne"],
+  },
+  {
+    id: "van-gogh",
+    name: "Vincent van Gogh",
+    movement: "post-impressionism",
+    century: "19th",
+    birthYear: 1853,
+    deathYear: 1890,
+    nationality: "Dutch",
+    bio: "Tormented genius whose swirling, emotionally charged paintings became icons of Western art.",
+    searchTerms: ["Vincent van Gogh"],
+  },
+  {
+    id: "gauguin",
+    name: "Paul Gauguin",
+    movement: "post-impressionism",
+    century: "19th",
+    birthYear: 1848,
+    deathYear: 1903,
+    nationality: "French",
+    bio: "Abandoned European civilization for Tahiti, developing a bold, flat, symbolic style.",
+    searchTerms: ["Paul Gauguin"],
+  },
+  {
+    id: "seurat",
+    name: "Georges Seurat",
+    movement: "post-impressionism",
+    century: "19th",
+    birthYear: 1859,
+    deathYear: 1891,
+    nationality: "French",
+    bio: "Inventor of Pointillism, applying scientific color theory through tiny dots of pure pigment.",
+    searchTerms: ["Georges Seurat"],
+  },
+  {
+    id: "klimt",
+    name: "Gustav Klimt",
+    movement: "art-nouveau",
+    century: "19th",
+    birthYear: 1862,
+    deathYear: 1918,
+    nationality: "Austrian",
+    bio: "Vienna's golden painter, fusing decorative pattern, symbolism, and eroticism.",
+    searchTerms: ["Gustav Klimt"],
+  },
+  {
+    id: "homer",
+    name: "Winslow Homer",
+    movement: "realism",
+    century: "19th",
+    birthYear: 1836,
+    deathYear: 1910,
+    nationality: "American",
+    bio: "America's greatest painter of the sea, capturing the raw power of nature with masterful watercolors.",
+    searchTerms: ["Winslow Homer"],
+  },
+
+  // 20th Century
+  {
+    id: "matisse",
+    name: "Henri Matisse",
+    movement: "fauvism",
+    century: "20th",
+    birthYear: 1869,
+    deathYear: 1954,
+    nationality: "French",
+    bio: "Leader of the Fauves, who liberated color from representation to express pure emotion.",
+    searchTerms: ["Henri Matisse"],
+  },
+  {
+    id: "picasso",
+    name: "Pablo Picasso",
+    movement: "cubism",
+    century: "20th",
+    birthYear: 1881,
+    deathYear: 1973,
+    nationality: "Spanish",
+    bio: "The most influential artist of the 20th century, co-founder of Cubism and relentless innovator.",
+    searchTerms: ["Pablo Picasso"],
+  },
+  {
+    id: "kandinsky",
+    name: "Wassily Kandinsky",
+    movement: "expressionism",
+    century: "20th",
+    birthYear: 1866,
+    deathYear: 1944,
+    nationality: "Russian",
+    bio: "Pioneer of pure abstraction who believed color and form could express spiritual truths like music.",
+    searchTerms: ["Wassily Kandinsky"],
+  },
+  {
+    id: "mondrian",
+    name: "Piet Mondrian",
+    movement: "expressionism",
+    century: "20th",
+    birthYear: 1872,
+    deathYear: 1944,
+    nationality: "Dutch",
+    bio: "Distilled painting to its essence — primary colors, black lines, and white space.",
+    searchTerms: ["Piet Mondrian"],
+  },
+  {
+    id: "modigliani",
+    name: "Amedeo Modigliani",
+    movement: "expressionism",
+    century: "20th",
+    birthYear: 1884,
+    deathYear: 1920,
+    nationality: "Italian",
+    bio: "Created an instantly recognizable style of elongated faces and figures with melancholic beauty.",
+    searchTerms: ["Amedeo Modigliani"],
+  },
+  {
+    id: "chagall",
+    name: "Marc Chagall",
+    movement: "expressionism",
+    century: "20th",
+    birthYear: 1887,
+    deathYear: 1985,
+    nationality: "Russian/French",
+    bio: "Poetic painter of floating lovers, fiddlers, and dreamlike villages drawn from his Jewish heritage.",
+    searchTerms: ["Marc Chagall"],
+  },
+  {
+    id: "dali",
+    name: "Salvador Dalí",
+    movement: "surrealism",
+    century: "20th",
+    birthYear: 1904,
+    deathYear: 1989,
+    nationality: "Spanish",
+    bio: "Flamboyant Surrealist whose hyper-realistic technique rendered impossible dream worlds.",
+    searchTerms: ["Salvador Dalí", "Salvador Dali"],
+  },
+  {
+    id: "magritte",
+    name: "René Magritte",
+    movement: "surrealism",
+    century: "20th",
+    birthYear: 1898,
+    deathYear: 1967,
+    nationality: "Belgian",
+    bio: "Philosophical Surrealist who challenged perception with witty, thought-provoking images.",
+    searchTerms: ["René Magritte", "Rene Magritte"],
+  },
+  {
+    id: "kahlo",
+    name: "Frida Kahlo",
+    movement: "surrealism",
+    century: "20th",
+    birthYear: 1907,
+    deathYear: 1954,
+    nationality: "Mexican",
+    bio: "Turned personal suffering into powerful, symbolic self-portraits blending Mexican folk art and Surrealism.",
+    searchTerms: ["Frida Kahlo"],
+  },
+  {
+    id: "okeeffe",
+    name: "Georgia O'Keeffe",
+    movement: "american-modernism",
+    century: "20th",
+    birthYear: 1887,
+    deathYear: 1986,
+    nationality: "American",
+    bio: "Mother of American Modernism, known for monumental flower paintings and stark desert landscapes.",
+    searchTerms: ["Georgia O'Keeffe", "Georgia O Keeffe"],
+  },
+  {
+    id: "hopper",
+    name: "Edward Hopper",
+    movement: "realism",
+    century: "20th",
+    birthYear: 1882,
+    deathYear: 1967,
+    nationality: "American",
+    bio: "Painter of American solitude, whose cinematic scenes of urban isolation define modern loneliness.",
+    searchTerms: ["Edward Hopper"],
+  },
+  {
+    id: "pollock",
+    name: "Jackson Pollock",
+    movement: "abstract-expressionism",
+    century: "20th",
+    birthYear: 1912,
+    deathYear: 1956,
+    nationality: "American",
+    bio: "The drip painter who made the act of painting itself the subject, launching Abstract Expressionism.",
+    searchTerms: ["Jackson Pollock"],
+  },
+  {
+    id: "rothko",
+    name: "Mark Rothko",
+    movement: "abstract-expressionism",
+    century: "20th",
+    birthYear: 1903,
+    deathYear: 1970,
+    nationality: "American",
+    bio: "Created transcendent fields of luminous color meant to evoke deep emotional and spiritual responses.",
+    searchTerms: ["Mark Rothko"],
+  },
+  {
+    id: "warhol",
+    name: "Andy Warhol",
+    movement: "pop-art",
+    century: "20th",
+    birthYear: 1928,
+    deathYear: 1987,
+    nationality: "American",
+    bio: "Pop Art icon who turned commercial imagery and celebrity culture into fine art.",
+    searchTerms: ["Andy Warhol"],
+  },
+];
+
+export function getArtistById(id: string): Artist | undefined {
+  return ARTISTS.find((a) => a.id === id);
+}
+
+export function getMovementById(id: string): Movement | undefined {
+  return MOVEMENTS.find((m) => m.id === id);
+}
+
+export function getMovementForArtist(artist: Artist): Movement | undefined {
+  return MOVEMENTS.find((m) => m.id === artist.movement);
+}
+
+export function getArtistsByMovement(movementId: string): Artist[] {
+  return ARTISTS.filter((a) => a.movement === movementId);
+}
+
+export function getArtistsByCentury(century: string): Artist[] {
+  return ARTISTS.filter((a) => a.century === century);
+}
+
+export const CENTURIES = [
+  "15th",
+  "16th",
+  "17th",
+  "18th",
+  "19th",
+  "20th",
+] as const;

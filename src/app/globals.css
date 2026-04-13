@@ -1,26 +1,176 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-cream: #faf7f2;
+  --color-cream-dark: #f0ebe3;
+  --color-ink: #1a1a1a;
+  --color-ink-light: #4a4a4a;
+  --color-ink-muted: #8a8a8a;
+  --color-gold: #c9a959;
+  --color-gold-light: #e8d9a0;
+  --color-gold-dark: #a08035;
+  --color-correct: #2d8a56;
+  --color-correct-light: #e8f5ec;
+  --color-wrong: #c44536;
+  --color-wrong-light: #fde8e8;
+  --color-gallery-wall: #3d3027;
+  --color-gallery-accent: #5a4a3a;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Elegant serif for headings */
+h1, h2, h3 {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  letter-spacing: -0.01em;
+}
+
+/* Painting frame effect */
+.painting-frame {
+  box-shadow:
+    0 0 0 2px #c9a959,
+    0 0 0 4px #a08035,
+    0 0 0 6px #c9a959,
+    8px 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.painting-frame-sm {
+  box-shadow:
+    0 0 0 1px #c9a959,
+    0 0 0 2px #a08035,
+    0 0 0 3px #c9a959,
+    4px 4px 15px rgba(0, 0, 0, 0.25);
+}
+
+/* Smooth fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  50% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.5; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.4s ease-out forwards;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0ebe3 25%, #faf7f2 50%, #f0ebe3 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Museum-style card */
+.museum-card {
+  background: white;
+  border: 1px solid #e8e2d8;
+  border-radius: 4px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.museum-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Choice buttons */
+.choice-btn {
+  background: white;
+  border: 2px solid #e8e2d8;
+  border-radius: 8px;
+  padding: 14px 20px;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+}
+
+.choice-btn:hover:not(:disabled) {
+  border-color: var(--color-gold);
+  background: #fffdf7;
+  transform: translateX(2px);
+}
+
+.choice-btn.correct {
+  border-color: var(--color-correct);
+  background: var(--color-correct-light);
+}
+
+.choice-btn.wrong {
+  border-color: var(--color-wrong);
+  background: var(--color-wrong-light);
+}
+
+.choice-btn:disabled {
+  cursor: default;
+}
+
+/* Progress ring */
+.progress-ring-circle {
+  transition: stroke-dashoffset 0.8s ease;
+  transform: rotate(-90deg);
+  transform-origin: 50% 50%;
+}
+
+/* Streak flame */
+.streak-flame {
+  display: inline-block;
+  font-size: 1.5rem;
+  animation: pulse-ring 2s ease-in-out infinite;
+}
+
+/* Loading painting */
+.loading-painting {
+  aspect-ratio: 3/4;
+  border-radius: 2px;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c9a959;
+  border-radius: 3px;
 }
