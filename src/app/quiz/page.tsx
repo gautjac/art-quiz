@@ -79,7 +79,10 @@ export default function QuizPage() {
 
     try {
       const progress = getProgress();
-      const artists = selectArtistsForQuiz(progress, QUIZ_SIZE + 5);
+      // Over-select candidates: some artists (in-copyright modern painters)
+      // have no freely-licensed image anywhere and yield nothing, so we need a
+      // healthy buffer to reliably fill QUIZ_SIZE questions.
+      const artists = selectArtistsForQuiz(progress, QUIZ_SIZE + 8);
       const artworkMap = await fetchArtworksForArtists(artists);
       const quizQuestions = generateQuizQuestions(
         artworkMap,
@@ -96,23 +99,28 @@ export default function QuizPage() {
       }
 
       // Pre-load ALL images before starting the quiz.
-      // Convert to blob URLs so they display instantly when switching questions.
+      // Warm the browser image cache so paintings display instantly when
+      // switching questions. We use Image() rather than fetch()+blob because
+      // the museum/Commons hosts don't send CORS headers (a cross-origin
+      // fetch would fail), whereas an <img> load needs no CORS and primes the
+      // same cache the quiz's <img> tags read from.
       setLoadingMessage("Loading paintings...");
-      const preloaded = await Promise.all(
-        quizQuestions.map(async (q) => {
-          try {
-            const res = await fetch(q.artwork.imageUrl);
-            if (!res.ok) return q;
-            const blob = await res.blob();
-            const blobUrl = URL.createObjectURL(blob);
-            return { ...q, artwork: { ...q.artwork, imageUrl: blobUrl } };
-          } catch {
-            return q; // keep original URL as fallback
-          }
-        })
+      await Promise.all(
+        quizQuestions.map(
+          (q) =>
+            new Promise<void>((resolve) => {
+              const done = () => resolve();
+              const img = new Image();
+              img.onload = done;
+              img.onerror = done;
+              img.src = q.artwork.imageUrl;
+              // Don't let a single slow image hold up the whole quiz.
+              setTimeout(done, 5000);
+            })
+        )
       );
 
-      setQuestions(preloaded);
+      setQuestions(quizQuestions);
       setPageState("playing");
     } catch (error) {
       console.error("Failed to load quiz:", error);

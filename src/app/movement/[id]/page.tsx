@@ -9,7 +9,7 @@ import {
   getArtistsByMovement,
   type Artist,
 } from "@/lib/artists";
-import { searchArtworks, getImageUrl } from "@/lib/museums/aic";
+import { fetchArtworksForArtist } from "@/lib/artwork-source";
 
 interface GalleryImage {
   id: string;
@@ -44,51 +44,36 @@ export default function MovementPage({
 
     const images: GalleryImage[] = [];
 
-    // Fetch 1-2 artworks per artist in this movement, up to 6 total
-    for (const artist of artists) {
-      if (images.length >= 6) break;
-      try {
-        const { artworks, iiifUrl } = await searchArtworks(
-          artist.searchTerms[0],
-          5,
-          artist.displayNames
-        );
-        const toTake = Math.min(
-          artworks.length,
-          artists.length <= 2 ? 3 : 2,
-          6 - images.length
-        );
-        for (let i = 0; i < toTake; i++) {
-          const a = artworks[i];
-          images.push({
-            id: `aic-${a.id}`,
-            title: a.title,
-            artistName: artist.name,
-            dateDisplay: a.date_display,
-            imageUrl: getImageUrl(iiifUrl, a.image_id!),
-            blobUrl: null,
-          });
-        }
-      } catch {
-        // skip this artist
+    // Fetch every artist's artworks concurrently, then assemble up to 6 images
+    // (1-3 per artist depending on how many artists the movement has).
+    const perArtist = await Promise.all(
+      artists.map((artist) =>
+        fetchArtworksForArtist(artist).catch(() => [])
+      )
+    );
+
+    for (let ai = 0; ai < artists.length && images.length < 6; ai++) {
+      const artist = artists[ai];
+      const artworks = perArtist[ai];
+      const toTake = Math.min(
+        artworks.length,
+        artists.length <= 2 ? 3 : 2,
+        6 - images.length
+      );
+      for (let i = 0; i < toTake; i++) {
+        const a = artworks[i];
+        images.push({
+          id: a.id,
+          title: a.title,
+          artistName: artist.name,
+          dateDisplay: a.dateDisplay,
+          imageUrl: a.imageUrl,
+          blobUrl: null,
+        });
       }
     }
 
-    // Pre-load images as blob URLs
-    const preloaded = await Promise.all(
-      images.map(async (img) => {
-        try {
-          const res = await fetch(img.imageUrl);
-          if (!res.ok) return img;
-          const blob = await res.blob();
-          return { ...img, blobUrl: URL.createObjectURL(blob) };
-        } catch {
-          return img;
-        }
-      })
-    );
-
-    setGallery(preloaded);
+    setGallery(images);
     setLoading(false);
   }, [artists.map((a) => a.id).join(",")]);
 
@@ -214,7 +199,8 @@ export default function MovementPage({
                     {img.title}
                   </p>
                   <p className="text-xs text-ink-muted truncate">
-                    {img.artistName}, {img.dateDisplay}
+                    {img.artistName}
+                    {img.dateDisplay ? `, ${img.dateDisplay}` : ""}
                   </p>
                 </div>
               ))}

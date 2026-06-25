@@ -9,8 +9,7 @@ import {
   type UserProgress,
   getArtistWeight,
 } from "./storage";
-import * as aic from "./museums/aic";
-import * as met from "./museums/met";
+import { fetchArtworksForArtist } from "./artwork-source";
 
 export interface QuizQuestion {
   artwork: ArtworkRecord;
@@ -101,76 +100,22 @@ export async function fetchArtworksForArtists(
 ): Promise<Map<string, ArtworkRecord[]>> {
   const results = new Map<string, ArtworkRecord[]>();
 
-  // Fetch from AIC in batches of 3 to avoid rate limits
-  const aicResults = await fetchBatch(artists, 3, async (artist) => {
+  // Each artist is sourced via the Wikidata → Met hybrid (one fast Wikidata
+  // call for most). Batch concurrently, but bounded to stay gentle on the
+  // Wikidata + museum endpoints.
+  const fetched = await fetchBatch(artists, 5, async (artist) => {
     try {
-      const searchTerm = artist.searchTerms[0];
-      const { artworks, iiifUrl } = await aic.searchArtworks(searchTerm, 40, artist.displayNames);
-
-      const records: ArtworkRecord[] = artworks.map((a) => ({
-        id: `aic-${a.id}`,
-        title: a.title,
-        artistId: artist.id,
-        artistName: artist.name,
-        imageUrl: aic.getImageUrl(iiifUrl, a.image_id!),
-        dateDisplay: a.date_display,
-        museum: "aic" as const,
-        museumId: a.id,
-      }));
-
+      const records = await fetchArtworksForArtist(artist);
       return { artistId: artist.id, records };
     } catch (e) {
-      console.error(`AIC fetch failed for ${artist.name}:`, e);
+      console.error(`Artwork fetch failed for ${artist.name}:`, e);
       return { artistId: artist.id, records: [] };
     }
   });
 
-  // Collect artists that need Met Museum fallback
-  const needsMet: Artist[] = [];
-  for (const result of aicResults) {
+  for (const result of fetched) {
     if (result.records.length > 0) {
       results.set(result.artistId, result.records);
-    } else {
-      const artist = artists.find((a) => a.id === result.artistId);
-      if (artist) needsMet.push(artist);
-    }
-  }
-
-  // Fetch from Met Museum for artists with no AIC results (batches of 3)
-  if (needsMet.length > 0) {
-    const metResults = await fetchBatch(needsMet, 3, async (artist) => {
-      try {
-        const searchTerm = artist.searchTerms[0];
-        const ids = await met.searchArtworks(searchTerm, 30);
-        const artworks = await met.getArtworksByIds(ids.slice(0, 15), 5);
-
-        // Strict validation: only keep artworks genuinely by this artist
-        const validArtworks = artworks.filter((a) =>
-          aic.isGenuineAttribution(a.artistDisplayName, artist.displayNames)
-        );
-
-        const records: ArtworkRecord[] = validArtworks.map((a) => ({
-          id: `met-${a.objectID}`,
-          title: a.title,
-          artistId: artist.id,
-          artistName: artist.name,
-          imageUrl: a.primaryImage,
-          dateDisplay: a.objectDate,
-          museum: "met" as const,
-          museumId: a.objectID,
-        }));
-
-        return { artistId: artist.id, records };
-      } catch (e) {
-        console.error(`Met fetch failed for ${artist.name}:`, e);
-        return { artistId: artist.id, records: [] };
-      }
-    });
-
-    for (const result of metResults) {
-      if (result.records.length > 0) {
-        results.set(result.artistId, result.records);
-      }
     }
   }
 

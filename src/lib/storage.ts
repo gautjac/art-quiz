@@ -1,14 +1,14 @@
 // Local storage wrapper for quiz progress and spaced repetition
 
 export interface ArtworkRecord {
-  id: string; // "aic-{id}" or "met-{id}"
+  id: string; // "met-{id}" or "wd-{qid}" (AIC retired — its images are now Cloudflare-gated)
   title: string;
   artistId: string;
   artistName: string;
   imageUrl: string;
   dateDisplay: string;
-  museum: "aic" | "met";
-  museumId: number;
+  museum: "aic" | "met" | "commons";
+  museumId: number | string;
 }
 
 export interface QuizAttempt {
