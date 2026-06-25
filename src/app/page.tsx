@@ -299,8 +299,8 @@ export default function HomePage() {
         {/* Footer */}
         <footer className="text-center py-8 border-t border-cream-dark">
           <p className="text-xs text-ink-muted">
-            Artworks courtesy of the Art Institute of Chicago &amp; the
-            Metropolitan Museum of Art
+            Artworks from the Metropolitan Museum of Art, the Cleveland Museum
+            of Art &amp; Wikimedia Commons
           </p>
           <p className="text-xs text-ink-muted mt-1">
             {totalArtists} artists &middot; {MOVEMENTS.length} movements

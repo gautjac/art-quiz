@@ -7,7 +7,7 @@ export interface ArtworkRecord {
   artistName: string;
   imageUrl: string;
   dateDisplay: string;
-  museum: "aic" | "met" | "commons" | "cma";
+  museum: "aic" | "met" | "commons" | "cma" | "local";
   museumId: number | string;
 }
 

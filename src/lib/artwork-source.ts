@@ -14,10 +14,24 @@
 
 import { type Artist } from "./artists";
 import { type ArtworkRecord } from "./storage";
+import { getLocalArtworks } from "./local-artworks";
 import { isGenuineAttribution } from "./museums/aic";
 import { searchArtworksByArtist as searchWikidata } from "./museums/wikidata";
 import { searchArtworksByArtist as searchCleveland } from "./museums/cleveland";
 import * as met from "./museums/met";
+
+/** Merge record lists in priority order, de-duping by title. */
+function mergeByTitle(...lists: ArtworkRecord[][]): ArtworkRecord[] {
+  const out: ArtworkRecord[] = [];
+  const seen = new Set<string>();
+  for (const r of lists.flat()) {
+    const key = r.title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    out.push(r);
+  }
+  return out;
+}
 
 // Never let one slow/rate-limited source stall the page: each is raced against
 // a timeout that resolves to an empty result.
@@ -31,7 +45,13 @@ function withTimeout<T>(p: Promise<T>, ms: number, fallback: T): Promise<T> {
 export async function fetchArtworksForArtist(
   artist: Artist
 ): Promise<ArtworkRecord[]> {
-  // Wikidata/Commons first: a single fast query that covers both public-domain
+  // User-supplied images come first and are authoritative — the only way to
+  // show in-copyright modern art the free APIs can't serve. If there are enough,
+  // use them alone (and skip the network entirely).
+  const localRecords = getLocalArtworks(artist);
+  if (localRecords.length >= 2) return localRecords;
+
+  // Wikidata/Commons next: a single fast query that covers both public-domain
   // and in-copyright modern art, with high-quality museum scans (NGA, Google
   // Art Project). One request per artist (vs. the Met's search-plus-N-object
   // lookups), which keeps a 10-artist quiz fast and avoids rate-limiting.
@@ -40,7 +60,7 @@ export async function fetchArtworksForArtist(
     7000,
     [] as ArtworkRecord[]
   );
-  if (wikidataRecords.length >= 2) return wikidataRecords;
+  if (wikidataRecords.length >= 2) return mergeByTitle(localRecords, wikidataRecords);
 
   // Thin on Commons — try the public-domain museums in parallel. Cleveland is
   // primary (a clean, fast API with inline images, and early PD prints for some
@@ -55,16 +75,14 @@ export async function fetchArtworksForArtist(
       : withTimeout(fetchFromMet(artist).catch(() => []), 6000, [] as ArtworkRecord[]),
   ]);
 
-  // Cleveland first (cleanest), then Met, then whatever Commons had. De-dupe.
-  const records: ArtworkRecord[] = [];
-  const seenTitles = new Set<string>();
-  for (const r of [...clevelandRecords, ...metRecords, ...wikidataRecords]) {
-    const key = r.title.toLowerCase();
-    if (seenTitles.has(key)) continue;
-    seenTitles.add(key);
-    records.push(r);
-  }
-  return records;
+  // Local first, then Cleveland (cleanest API), then Met, then whatever Commons
+  // had.
+  return mergeByTitle(
+    localRecords,
+    clevelandRecords,
+    metRecords,
+    wikidataRecords
+  );
 }
 
 async function fetchFromMet(artist: Artist): Promise<ArtworkRecord[]> {
