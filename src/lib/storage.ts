@@ -1,13 +1,13 @@
 // Local storage wrapper for quiz progress and spaced repetition
 
 export interface ArtworkRecord {
-  id: string; // "met-{id}" or "wd-{qid}" (AIC retired — its images are now Cloudflare-gated)
+  id: string; // "wd-{qid}", "cma-{id}", or "met-{id}" (AIC retired — Cloudflare-gated)
   title: string;
   artistId: string;
   artistName: string;
   imageUrl: string;
   dateDisplay: string;
-  museum: "aic" | "met" | "commons";
+  museum: "aic" | "met" | "commons" | "cma";
   museumId: number | string;
 }
 

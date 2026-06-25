@@ -15,7 +15,8 @@
 import { type Artist } from "./artists";
 import { type ArtworkRecord } from "./storage";
 import { isGenuineAttribution } from "./museums/aic";
-import { searchArtworksByArtist } from "./museums/wikidata";
+import { searchArtworksByArtist as searchWikidata } from "./museums/wikidata";
+import { searchArtworksByArtist as searchCleveland } from "./museums/cleveland";
 import * as met from "./museums/met";
 
 // Never let one slow/rate-limited source stall the page: each is raced against
@@ -32,31 +33,32 @@ export async function fetchArtworksForArtist(
 ): Promise<ArtworkRecord[]> {
   // Wikidata/Commons first: a single fast query that covers both public-domain
   // and in-copyright modern art, with high-quality museum scans (NGA, Google
-  // Art Project). It's one request per artist vs. the Met's search-plus-N-object
-  // lookups, which keeps a 10-artist quiz fast and avoids rate-limiting.
+  // Art Project). One request per artist (vs. the Met's search-plus-N-object
+  // lookups), which keeps a 10-artist quiz fast and avoids rate-limiting.
   const wikidataRecords = await withTimeout(
-    searchArtworksByArtist(artist, 40).catch(() => []),
+    searchWikidata(artist, 40).catch(() => []),
     7000,
     [] as ArtworkRecord[]
   );
   if (wikidataRecords.length >= 2) return wikidataRecords;
 
-  // The Met holds no open-access images for in-copyright 20th-century artists,
-  // so don't waste a slow search-plus-object round-trip on them — whatever
-  // Commons returned (often nothing) is all there is.
-  if (artist.century === "20th") return wikidataRecords;
+  // Thin on Commons — try the public-domain museums in parallel. Cleveland is
+  // primary (a clean, fast API with inline images, and early PD prints for some
+  // moderns Commons misses, e.g. Picasso); the Met is the secondary fallback,
+  // but only for pre-20th-century artists since it holds no open-access images
+  // for in-copyright moderns. Artists with nothing free anywhere come back empty
+  // and are gracefully skipped.
+  const [clevelandRecords, metRecords] = await Promise.all([
+    withTimeout(searchCleveland(artist, 30).catch(() => []), 6000, [] as ArtworkRecord[]),
+    artist.century === "20th"
+      ? Promise.resolve([] as ArtworkRecord[])
+      : withTimeout(fetchFromMet(artist).catch(() => []), 6000, [] as ArtworkRecord[]),
+  ]);
 
-  // Thin on Commons — fall back to the Met's public-domain holdings and merge
-  // (Met first for provenance). For artists with nothing free anywhere, both
-  // come back empty and the artist is gracefully skipped.
-  const metRecords = await withTimeout(
-    fetchFromMet(artist).catch(() => []),
-    6000,
-    [] as ArtworkRecord[]
-  );
+  // Cleveland first (cleanest), then Met, then whatever Commons had. De-dupe.
   const records: ArtworkRecord[] = [];
   const seenTitles = new Set<string>();
-  for (const r of [...metRecords, ...wikidataRecords]) {
+  for (const r of [...clevelandRecords, ...metRecords, ...wikidataRecords]) {
     const key = r.title.toLowerCase();
     if (seenTitles.has(key)) continue;
     seenTitles.add(key);
