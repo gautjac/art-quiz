@@ -34,13 +34,27 @@ export interface LocalArtwork {
 }
 
 export const LOCAL_ARTWORKS: LocalArtwork[] = [
-  // Examples — uncomment and point at real files you've added under public/artists/:
+  // ── The 9 artists with NO free image from any source (all in-copyright) ──
+  // A folder is pre-made for each under public/artists/<id>/. Drop an image in,
+  // then uncomment its line (titles/filenames below are suggestions — change
+  // them to whatever work you actually add).
   //
-  // { artistId: "pollock", title: "Number 1, 1950 (Lavender Mist)", date: "1950", file: "/artists/pollock/lavender-mist.jpg" },
-  // { artistId: "rothko",  title: "Orange, Red, Yellow",            date: "1961", file: "/artists/rothko/orange-red-yellow.jpg" },
-  // { artistId: "warhol",  title: "Marilyn Diptych",                date: "1962", file: "/artists/warhol/marilyn-diptych.jpg" },
-  // { artistId: "okeeffe", title: "Jimson Weed/White Flower No. 1", date: "1932", file: "/artists/okeeffe/jimson-weed.jpg" },
-  // { artistId: "picasso", title: "Les Demoiselles d'Avignon",      date: "1907", file: "/artists/picasso/demoiselles.jpg" },
+  // Abstract Expressionism
+  // { artistId: "pollock",       title: "Number 1, 1950 (Lavender Mist)", date: "1950",    file: "/artists/pollock/lavender-mist.jpg" },
+  // { artistId: "rothko",        title: "Orange, Red, Yellow",            date: "1961",    file: "/artists/rothko/orange-red-yellow.jpg" },
+  // { artistId: "de-kooning",    title: "Woman I",                        date: "1950–52", file: "/artists/de-kooning/woman-i.jpg" },
+  // { artistId: "frankenthaler", title: "Mountains and Sea",              date: "1952",    file: "/artists/frankenthaler/mountains-and-sea.jpg" },
+  //
+  // Pop Art
+  // { artistId: "oldenburg",     title: "Floor Burger",                   date: "1962",    file: "/artists/oldenburg/floor-burger.jpg" },
+  // { artistId: "rosenquist",    title: "F-111",                          date: "1964–65", file: "/artists/rosenquist/f-111.jpg" },
+  // { artistId: "ruscha",        title: "Standard Station",               date: "1966",    file: "/artists/ruscha/standard-station.jpg" },
+  //
+  // Surrealism
+  // { artistId: "kahlo",         title: "The Two Fridas",                 date: "1939",    file: "/artists/kahlo/the-two-fridas.jpg" },
+  // { artistId: "max-ernst",     title: "The Elephant Celebes",           date: "1921",    file: "/artists/max-ernst/elephant-celebes.jpg" },
+
+  // ── You can also add extra images for any other artist the same way ──
 ];
 
 /** Local images registered for an artist, as ready-to-display ArtworkRecords. */
